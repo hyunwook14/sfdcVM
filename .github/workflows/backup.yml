@@ -34,7 +34,7 @@ jobs:
             # 
             #login_url: # optional, default is https://login.salesforce.com
             # combination of <password>:<security_token>
-            password: q1w2e3r4
+            password: q1w2e3r4:UFRjQl16RNajIyLiSPWKNhhxn
             # Consumer Key of a connected App created within salesforce
             sfdc_client_id: 3MVG9WVXk15qiz1J5vh1stT25VHO_WfHOXTEzI1tu1ZASdl0zQclqsnEbf1OIW35ZuZSH6AWczM3T5UNfE0f2
             # Consumer Secret of a connected App created within salesforce
