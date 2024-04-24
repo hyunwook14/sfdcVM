@@ -40,15 +40,18 @@ jobs:
             # Consumer Secret of a connected App created within salesforce
             sfdc_client_secret: E9A23791739F8C727F9527DAE03DF5B0A8052C471F277CDF8350ABE1973A983C
 
-
+      # sf project retrieve start --manifest ../manifest/package.xml
+      # echo "Retrieve Finished."
       - name: Retreieve
         run: |
           pwd
           echo "Current Path"
-          ls
+          ls -a
           echo "Directory List"
-          sf project retrieve start --manifest ../manifest/package.xml
-          echo "Retrieve Finished."
+          cd ..
+          ls -a
+          
+          
           
 
   
