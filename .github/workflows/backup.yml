@@ -17,15 +17,10 @@ jobs:
         # ~/cli/sf/install
         run: |
           wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-x64.tar.xz
-          echo "Download Finish."
           mkdir -p ~/cli/sf
-          echo "Make a Dir."
           tar xJf sf-linux-x64.tar.xz -C ~/cli/sf --strip-components 1
-          echo "tar Finish."
           export PATH=~/cli/sf/bin:$PATH
-          echo "export Finish."
           PATH=~/cli/sf/bin:$PATH
-          echo "PATH Finish."
           sf -v
           sf update
 
@@ -48,6 +43,8 @@ jobs:
 
       - name: Retreieve
         run: |
+          pwd
+          echo "Current Path"
           sf project retrieve start --manifest ./manifest/package.xml
           echo "Retrieve Finished."
           
