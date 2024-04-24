@@ -59,6 +59,10 @@ jobs:
           ls -a
           echo "Directory List"
           sf -v
+          sf project retrieve start --manifest ../manifest/package.xml
+          cd ./force-app/force-app/main/default/classes
+          ls -a
+
           
           
           
