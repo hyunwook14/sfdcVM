@@ -13,8 +13,9 @@ jobs:
       #Search Folder Graph
       - name : Search Folder Graph
         run : |
-          sudo apt install tree
+          cd ~ 
           tree -L 4 -d -f 
+          ls -a
       ## Install Salesforce CLI 주석
       #- name: Install Salesforce CLI
         # wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-arm64.tar.xz
