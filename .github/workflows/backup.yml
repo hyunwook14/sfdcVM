@@ -45,6 +45,9 @@ jobs:
         run: |
           pwd
           echo "Current Path"
+          cd ../
+          ls
+          echo "Directory List"
           sf project retrieve start --manifest ./manifest/package.xml
           echo "Retrieve Finished."
           
