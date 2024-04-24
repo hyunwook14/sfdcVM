@@ -1,0 +1,45 @@
+name: back_up
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '55 02 * * *'
+
+
+jobs:
+  back_up:
+    runs-on: ubuntu-latest
+    steps:
+      # Install Salesforce CLI
+      - name: Install Salesforce CLI
+        run: |
+          wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-arm64.tar.xz
+          mkdir sfdx-cli
+          tar xJf sf-linux-arm64.tar.xz -C sfdx-cli --strip-components 1
+          . /sfdx-cli/install
+
+      - name: Salesforce CLI Setup
+      # You may pin to the exact commit or the version.
+      # uses: karamchandanid/sfdx-setup@16c67b6461448e6e0f78e565326e4c8a8385799a
+        uses: karamchandanid/sfdx-setup@v2
+        with:
+            # 
+            user_name: hyunwook.jin@version2.com
+            # 
+            #login_url: # optional, default is https://login.salesforce.com
+            # combination of <password>:<security_token>
+            password: q1w2e3r4
+            # Consumer Key of a connected App created within salesforce
+            sfdc_client_id: 3MVG9WVXk15qiz1J5vh1stT25VHO_WfHOXTEzI1tu1ZASdl0zQclqsnEbf1OIW35ZuZSH6AWczM3T5UNfE0f2
+            # Consumer Secret of a connected App created within salesforce
+            sfdc_client_secret: E9A23791739F8C727F9527DAE03DF5B0A8052C471F277CDF8350ABE1973A983C
+
+
+      - name: Retreieve
+        run: |
+          sf project retrieve start --manifest ./manifest/package.xml
+          echo "Retrieve Finished."
+          
+
+  
+
