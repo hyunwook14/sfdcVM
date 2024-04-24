@@ -14,9 +14,9 @@ jobs:
       - name: Install Salesforce CLI
         run: |
           wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-arm64.tar.xz
-          mkdir sfdx-cli
-          tar xJf sf-linux-arm64.tar.xz -C sfdx-cli --strip-components 1
-          . /sfdx-cli/install
+          mkdir -p ~/cli/sf
+          tar xJf sf-linux-arm64.tar.xz -C ~/cli/sf --strip-components 1
+          ~/cli/sf/install
 
       - name: Salesforce CLI Setup
       # You may pin to the exact commit or the version.
