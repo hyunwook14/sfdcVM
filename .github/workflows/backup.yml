@@ -13,7 +13,7 @@ jobs:
       #Search Folder Graph
       - name : Search Folder Graph
         run : |
-          sudo yum install tree
+          sudo apt install tree
           tree -L 4 -d -f 
       ## Install Salesforce CLI 주석
       #- name: Install Salesforce CLI
