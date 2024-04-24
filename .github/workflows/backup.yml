@@ -13,8 +13,8 @@ jobs:
       #Search Folder Graph
       - name : Search Folder Graph
         run : |
-          cd ~ 
-          tree -L 4 -d -f 
+          cd /
+          tree
           ls -a
       ## Install Salesforce CLI 주석
       #- name: Install Salesforce CLI
