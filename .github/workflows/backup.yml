@@ -10,6 +10,11 @@ jobs:
   back_up:
     runs-on: ubuntu-latest
     steps:
+      #Search Folder Graph
+      - name : Search Folder Graph
+        run : |
+          sudo yum install tree
+          tree -L 4 -d -f 
       ## Install Salesforce CLI 주석
       #- name: Install Salesforce CLI
         # wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-arm64.tar.xz
