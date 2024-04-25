@@ -63,6 +63,8 @@ jobs:
           echo "Before Retrieve Folder Tree"
           sf project retrieve start --manifest ./manifest/package.xml
           tree -f
+          echo "After Retrieve Folde Tree"
+          echo "$(git status --porcelain)"
           if [ -n "$(git status --porcelain)" ]; then
             echo "변경사항이 없습니다.";
             exit;
