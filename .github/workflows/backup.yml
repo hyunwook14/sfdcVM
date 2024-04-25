@@ -29,7 +29,7 @@ jobs:
       #    PATH=~/cli/sf/bin:$PATH
       #    sf -v
       #    sf update
-
+      - run: echo "🔎 Retrieving ${{ github.ref }} from ${{ github.repository }}."
       - name: Salesforce CLI Setup
       # You may pin to the exact commit or the version.
       # uses: karamchandanid/sfdx-setup@16c67b6461448e6e0f78e565326e4c8a8385799a
