@@ -59,6 +59,8 @@ jobs:
           ls -a
           echo "Directory List"
           sf -v
+          tree -f
+          echo "Before Retrieve Folder Tree"
           sf project retrieve start --manifest ./manifest/package.xml
           tree -f
           if [ -n "$(git status --porcelain)" ]; then
