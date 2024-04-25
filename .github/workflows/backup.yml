@@ -64,7 +64,7 @@ jobs:
           git add .
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          git commit -am $(date +"%Y%m%d Backup")
+          git commit -am Backup
           git push
 
           
