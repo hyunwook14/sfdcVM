@@ -61,11 +61,18 @@ jobs:
           sf -v
           sf project retrieve start --manifest ./manifest/package.xml
           tree -f
-          git add .
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git commit -am Backup
-          git push
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "변경사항이 없습니다.";
+            exit;
+            else
+              echo "변경사항이 있습니다.";
+              git add .
+              git config --global user.email "github-actions@github.com"
+              git config --global user.name "github-actions"
+              git commit -am Backup
+              git push
+          fi
+          
 
           
           
