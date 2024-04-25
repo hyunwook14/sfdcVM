@@ -65,9 +65,9 @@ jobs:
           tree -f
           echo "After Retrieve Folde Tree"
           echo "$(git status --porcelain)"
-          thisday=$(date +"%Y%m%d")
+          thisday=$(date +"%FT%T")
           echo $thisday
-          commitMsg="$thisday Backup"
+          commitMsg="$thisday Auto Backup"
           if [ -n "$(git status --porcelain)" ]; then
             echo "변경사항이 있습니다.";
             git add .
