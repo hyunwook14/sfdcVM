@@ -66,14 +66,14 @@ jobs:
           echo "After Retrieve Folde Tree"
           echo "$(git status --porcelain)"
           thisday=$(date +"%Y%m%d")
-          echo $commitMsg
+          echo $thisday
           commitMsg="$thisday Backup"
           if [ -n "$(git status --porcelain)" ]; then
             echo "변경사항이 있습니다.";
             git add .
               git config --global user.email "github-actions@github.com"
               git config --global user.name "github-actions"
-              git commit -am ${commitMsg} 
+              git commit -am "$commitMsg" 
               git push
             exit;
           else
