@@ -61,8 +61,11 @@ jobs:
           sf -v
           sf project retrieve start --manifest ./manifest/package.xml
           tree -f
-          cd ./force-app/main/default/classes
-          ls -a
+          git add .
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git commit -am $(date +"%Y%m%d")+ " Backup"
+          git push
 
           
           
