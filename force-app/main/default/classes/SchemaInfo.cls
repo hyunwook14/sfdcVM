@@ -7,7 +7,6 @@
 */
 public inherited sharing class SchemaInfo {
     private Schema.SObjectType type;
-    private Schema.DescribeSObjectResult result;
 
     public SchemaInfo() {}
     public SchemaInfo(String sObjectType) {
@@ -16,7 +15,6 @@ public inherited sharing class SchemaInfo {
 
     public void setSchema(String sObjectType) {
         this.type = Schema.getGlobalDescribe().get(sObjectType);
-        this.result = this.type.getDescribe();
     }
 
     public Schema.SObjectType getType() {
@@ -45,6 +43,10 @@ public inherited sharing class SchemaInfo {
 
     public Map<String, Schema.RecordTypeInfo> getRecordTypeMapByNames() {
         return this.type?.getDescribe().getRecordTypeInfosByName();
+    }
+
+    public Set<String> getRecordTypeMapByNamesKeySet() {
+        return this.type?.getDescribe().getRecordTypeInfosByName().keySet();
     }
 
     public Schema.RecordTypeInfo getRecordTypeByDeveloperName(String name) {
