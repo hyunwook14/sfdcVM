@@ -29,6 +29,40 @@ public inherited sharing class SchemaInfo {
         return this.type?.getDescribe().getLabel();
     }
 
+    public String getIconName() {
+        System.debug('[1]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+        String iconName = '';
+        Boolean isSkip = false;
+
+        for(Schema.DescribeTabSetResult tabDescribe : Schema.describeTabs()) {
+            List<Schema.DescribeIconResult> iconDescribes = new List<Schema.DescribeIconResult>();
+            for(Schema.DescribeTabResult tabInfo : tabDescribe.getTabs()) {
+                if(isSkip) break;
+                if(tabInfo.getSobjectName().equals(this.getTypeToString())){
+                    if(tabInfo.isCustom())
+                        iconDescribes.addAll(tabInfo.getIcons());
+                    else 
+                        iconName = 'standard:'+this.getTypeToString().toLowerCase();
+
+                    isSkip = true;
+                    break;
+                }
+            }
+
+            for(Schema.DescribeIconResult iconInfo: iconDescribes) {
+                if('image/svg+xml'.equals(iconInfo.getContentType())) {
+                    iconName = 'custom:'+iconInfo.getUrl().substringBetween('custom/', '.svg').substringBefore('_');
+                    break;
+                }
+
+            }
+            
+            if(isSkip) break;
+        }
+        System.debug('[2]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+        return iconName;
+    }
+
     public Schema.DescribeSObjectResult getResult() {
         return this.type?.getDescribe();
     }
