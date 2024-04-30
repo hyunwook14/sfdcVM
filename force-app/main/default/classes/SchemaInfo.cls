@@ -13,24 +13,50 @@ public inherited sharing class SchemaInfo {
         this.setSchema(sObjectType);
     }
 
+    /**
+    * Schema SObjectType 설정
+    *
+    *@param  sObjectType sObject API
+    */
     public void setSchema(String sObjectType) {
         this.type = Schema.getGlobalDescribe().get(sObjectType);
     }
 
+   /**
+   * Schema sObjectType 가져오기
+   *
+   *@return  Schema.SObjectType`
+   */
     public Schema.SObjectType getType() {
         return this.type;
     }
 
+    /**
+    * sObject API 명 가져오기
+    *
+    *@return  ${sObjectAPI} : Account...
+    */
     public String getTypeToString() {
         return String.valueOf(this.type);
     }
 
+    /**
+    * sObject Label 명 가져오기
+    *
+    *@return (번역에 따라 Label 명 달라짐) Account ...
+    */
     public String getLabel() {
         return this.type?.getDescribe().getLabel();
     }
 
+    /**
+    * sObject Tab 의 Icon 명 가져오기
+    *
+    *@return  standard:account or custom: custom8 ...
+    */
     public String getIconName() {
         System.debug('[1]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+        // System.debug('[1]'+ Limits.getCpuTime() + ' of '+ Limits.getLimitCpuTime());
         String iconName = '';
         Boolean isSkip = false;
 
@@ -60,6 +86,7 @@ public inherited sharing class SchemaInfo {
             if(isSkip) break;
         }
         System.debug('[2]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+        // System.debug('[2]'+ Limits.getCpuTime() + ' of '+ Limits.getLimitCpuTime());
         return iconName;
     }
 
