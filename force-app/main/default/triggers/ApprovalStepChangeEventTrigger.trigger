@@ -1,34 +1,69 @@
 trigger ApprovalStepChangeEventTrigger on ProcessInstanceStepChangeEvent (after insert) {
-	//단건이냐? 다건이냐?
-    System.debug('Step size: '+Trigger.new.size());
-    System.debug(JSON.serialize(Trigger.new));
-    Set<String> processInstanceIdSet = new Set<String>();
-    Set<String> orginActorIdSet = new Set<String>();
-    Set<String> targetIdSet = new Set<String>();
-    Map<String, CApproval_Line__c> lineMap = new Map<String,CApproval_Line__c>();
+    
+    ApporvalDocuments documentConnector = new ApporvalDocuments();
+
     for(ProcessInstanceStepChangeEvent e : Trigger.new) {
-     	processInstanceIdSet.add(e.ProcessInstanceId);
-        orginActorIdSet.add(e.OriginalActorId);
+        documentConnector.setActionByStandardApprovalDocument(e);
     }
     
-    Map<Id,ProcessInstance> processMap = new Map<Id,ProcessInstance>([select Id, TargetObjectId from ProcessInstance where Id IN :processInstanceIdSet]);
-    
-    for(Id Key : processMap.keySet()) {
-        targetIdSet.add(processMap.get(Key).TargetObjectId);
+    for(ProcessInstance approvalMaster : [select Id, TargetObjectId from ProcessInstance where Id IN :documentConnector.getStatusMapOfStandardDoc().keySet()]) {
+        documentConnector.linkDocBetweendCustomAndStandard(approvalMaster);
     }
     
-    for(CApproval_Line__c line : [select Id, User__c, Approval_Status__c from CApproval_Line__c where Type__c = '결재자' and Approval_Status__c != 'Approval' and CApproval__c IN :targetIdSet]) {
-        
+    if(documentConnector.checkChangingDocLine()) documentConnector.updateDocLineStatus();
+
+    public class ApporvalDocuments {
+
+        Map<String,String> statusMapOfStandardDoc;
+        Map<String,String> customAndStandardDocMapping;
+        List<CApproval_Line__c> changeStatusLienList;
+
+        public ApporvalDocuments() {
+            statusMapOfStandardDoc = new Map<String,String>();
+            customAndStandardDocMapping = new Map<String,String>(); 
+        }
+
+        public void setActionByStandardApprovalDocument(ProcessInstanceStepChangeEvent e) {
+            switch on e.StepStatus {
+                when 'Approved', 'Rejected' {		
+                    statusMapOfStandardDoc.put(e.ProcessInstanceId, e.StepStatus);
+                }	
+            }
+        }
+
+        public void linkDocBetweendCustomAndStandard(ProcessInstance approvalMaster) {
+            customAndStandardDocMapping.put(approvalMaster.TargetObjectId, approvalMaster.Id);
+        }
+
+        public Map<String,String> getCustomAndStandardDocMapping() {
+            return customAndStandardDocMapping;
+        } 
+
+        public Map<String,String> getStatusMapOfStandardDoc() {
+            return statusMapOfStandardDoc;
+        }
+
+        public Boolean checkChangingDocLine() {
+            changeStatusLienList = new List<CApproval_Line__c>();
+
+            for(CApproval__c customApproval : [ select Id, Approval_Status__c, FM_Step__c, Total_Approver_Count__c, Approved_Count__c,  ( select Id, User__c, Approval_Status__c , Type__c  from CApproval_Line__r order by Order__c ) from CApproval__c where Id IN :CustomAndStandardDocMapping.keySet()]) {
+                Integer lineIdx = 0;
+                for(CApproval_Line__c line : customApproval.CApproval_Line__r) {
+                    if(customApproval.Approved_Count__c != lineIdx++) continue;
+
+                    line.Approval_Status__c = statusMapOfStandardDoc.get(customAndStandardDocMapping.get(customApproval.Id));
+                    
+                    changeStatusLienList.add(line);
+                }
+            }
+
+            return !changeStatusLienList.isEmpty();
+        }
+
+        public void updateDocLineStatus() {
+            if(changeStatusLienList != null && !changeStatusLienList.isEmpty()) update changeStatusLienList;
+        }
+
     }
-        
-    for(ProcessInstanceStepChangeEvent e : Trigger.new) {
-          switch on e.StepStatus {
-    		when 'Approved' {		
-        		// code block 1
-    		}	
-    		when 'Rejected' {		// when block 2
-        		// code block 2
-    		}
-          }
-    }
+
 }
