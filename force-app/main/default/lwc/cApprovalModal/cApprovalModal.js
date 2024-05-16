@@ -1,10 +1,12 @@
 import { LightningElement } from 'lwc';
 import LightningModal from 'lightning/modal';
+import { closeScreenAction } from 'c/utils';
 
 export default class CApprovalModal extends LightningModal  {
-
-    handleClose() {
-        this.close('close');
+    
+    handleOkay() {
+        this.close('okay');
+        
+        closeScreenAction(this);
     }
-
 }
