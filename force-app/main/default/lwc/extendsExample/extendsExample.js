@@ -22,4 +22,14 @@ export default class ExtendsExample extends baseElements {
             },
         });
     }
+
+    newEvent(event) {
+        this.navigateToCustom({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Event',
+                actionName: 'new',
+            },
+        });
+    }
 }

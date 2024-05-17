@@ -3,8 +3,12 @@
     <lightning-modal-body> Content: 
         
         <c-extends-example></c-extends-example>
+        <br/>
+        <c-custom-toast></c-custom-toast>
     </lightning-modal-body>
     <lightning-modal-footer>
+        <lightning-button label="Move Home" onclick={handleMoveHome}></lightning-button>
+        <lightning-button label="Show Toast" onclick={handleShowToast}></lightning-button>
         <lightning-button label="OK" onclick={handleOkay}></lightning-button>
     </lightning-modal-footer>
 </template>

@@ -7,8 +7,8 @@ export default class BaseElements extends NavigationMixin(LightningElement) {
     pageRef;
 
     connectedCallback() {
-        console.log('Base connectedCallback()');
-        console.log(this.pageRef);
+        // console.log('Base connectedCallback()');
+        // console.log(this.pageRef);
     }
 
 

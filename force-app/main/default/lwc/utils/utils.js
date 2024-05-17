@@ -23,11 +23,13 @@ const utilShowToast = (title, message, variant, mode) => {
 /**
 * sObject Screen Action Type 으로 Action 버튼 생성시 (LightningModal, LightningElement 둘다 사용가능)
 * Quick Action Panel 닫기 
+* 호출하는 곳에서 method call 혹은 bind 필수
 *
-*@param target required 닫을 Quick Action Panel
 */
-const closeScreenAction = (target) => {
-    target.dispatchEvent(new CloseActionScreenEvent());
+const closeScreenAction = function() {
+    //debugger;
+    
+    this.dispatchEvent(new CloseActionScreenEvent());
 }
 
 export {closeScreenAction};

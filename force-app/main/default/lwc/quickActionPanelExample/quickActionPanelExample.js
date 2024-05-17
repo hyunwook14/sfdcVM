@@ -4,6 +4,7 @@ import { closeScreenAction } from 'c/utils';
 export default class QuickActionPanelExample extends LightningElement {
     
     handleClose() {
-        closeScreenAction(this);
+        closeScreenAction.call(this);
+        
     }
 }
