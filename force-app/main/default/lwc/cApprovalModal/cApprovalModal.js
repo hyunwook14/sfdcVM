@@ -1,17 +1,20 @@
 import { LightningElement, wire } from 'lwc';
 import LightningModal from 'lightning/modal';
-import { NavigationMixin, CurrentPageReference  } from 'lightning/navigation';
-import { CBaseNav } from 'c/baseNav';
+
+// import { NavigationMixin, CurrentPageReference  } from 'lightning/navigation';
+import { CustomBaseNav } from 'c/baseNav';
 import { closeScreenAction } from 'c/utils';
 
-export default class CApprovalModal extends CBaseNav(LightningModal)  {
+export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
     closeAction = closeScreenAction.bind(this);
 
-    @wire(CurrentPageReference)
-    pageRef;
+    // @wire(CurrentPageReference)
+    // pageRef;
 
     connectedCallback() {
+        console.log('CApprovalModal');
         console.log(this.pageRef);
+        
     }
 
     handleOkay() {
@@ -31,7 +34,14 @@ export default class CApprovalModal extends CBaseNav(LightningModal)  {
         ]);
     }
 
-    handleMoveHome() {
-        console.log('handleMoveHome');
-    }
+    // handleMoveHome() {
+    //     console.log('handleMoveHome');
+    //     this[NavigationMixin.Navigate]({
+    //         type: 'standard__objectPage',
+    //         attributes: {
+    //             objectApiName: 'Event',
+    //             actionName: 'new',
+    //         },
+    //     });
+    // }
 }
