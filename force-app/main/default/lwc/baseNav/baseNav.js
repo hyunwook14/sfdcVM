@@ -7,7 +7,7 @@ const extendsBase = (Base) => {
 }
 
 export const CustomBaseNav = (Base) => {
-    return class extends NavigationMixin(Base) {
+    return class extends NavigationMixin(extendsBase(Base)) {
         @wire(CurrentPageReference)
         pageRef;
 
@@ -69,12 +69,16 @@ export const CustomBaseNav = (Base) => {
         navigateToCustom(pageRef) {
             this[NavigationMixin.Navigate](pageRef);
         }
+
+        async generateToCustom(pageRef) {
+            return this[NavigationMixin.GenerateUrl](pageRef).then((url)=>url);
+        }
     };
 };
 
 
-export const CustomBaseNav2 = (Base) =>{
-    return class extends CustomBaseNav(extendsBase(Base)) {
-        testSuccess=true
-    };
-};
+// export const CustomBaseNav2 = (Base) =>{
+//     return class extends CustomBaseNav(extendsBase(Base)) {
+//         testSuccess=true
+//     };
+// };

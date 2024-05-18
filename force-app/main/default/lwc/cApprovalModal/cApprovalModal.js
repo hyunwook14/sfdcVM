@@ -25,7 +25,7 @@ export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
     }
 
     handleShowToast() {
-        this.template.querySelector('c-custom-toast').showToast('Success!', 'Record {0} created! See it {1}!', 'success', 'dismissible',[
+        this.template.querySelector('c-custom-toast').showToast('Success!', 'Record {0} created! See it {1}!', 'success', 'sticky',[
             'Salesforce',
             {
                 url: 'http://www.salesforce.com/',
@@ -34,14 +34,25 @@ export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
         ]);
     }
 
-    // handleMoveHome() {
-    //     console.log('handleMoveHome');
-    //     this[NavigationMixin.Navigate]({
-    //         type: 'standard__objectPage',
-    //         attributes: {
-    //             objectApiName: 'Event',
-    //             actionName: 'new',
-    //         },
-    //     });
-    // }
+    async handleMoveHome() {
+        console.log('handleMoveHome');
+        
+        let result = await this.generateToCustom({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Event',
+                actionName: 'new',
+            },
+        });
+
+        console.log(result);
+        
+        this.navigateToCustom({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Event',
+                actionName: 'new',
+            },
+        });
+    }
 }

@@ -1,8 +1,8 @@
-import { LightningElement,api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class CustomToast extends LightningElement {
-
+    @track isShowCustomToast = true;
     /**
     * ShowToast 
     *
@@ -23,5 +23,9 @@ export default class CustomToast extends LightningElement {
         });
 
         this.dispatchEvent(event);
+    }
+
+    handleClose() {
+        this.isShowCustomToast = false;
     }
 }

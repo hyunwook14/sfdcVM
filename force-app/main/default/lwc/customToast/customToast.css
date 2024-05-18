@@ -1,0 +1,10 @@
+.fixed {
+    text-align: center;
+    top:100px;
+    position:fixed;
+    z-index: 10000;
+}
+
+.fixed .absolute {
+    position:absolute;
+}
