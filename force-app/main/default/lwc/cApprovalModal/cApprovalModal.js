@@ -1,11 +1,11 @@
 import { LightningElement, wire } from 'lwc';
 import LightningModal from 'lightning/modal';
 
-// import { NavigationMixin, CurrentPageReference  } from 'lightning/navigation';
-// import { CustomBaseNav } from 'c/baseNav';
+// import { NavigationMixin } from 'lightning/navigation';
+import { CustomBaseNav } from 'c/baseNav';
 import { closeScreenAction } from 'c/utils';
 
-export default class CApprovalModal extends LightningModal  {
+export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
     closeAction = closeScreenAction.bind(this);
 
     // @wire(CurrentPageReference)
@@ -14,6 +14,13 @@ export default class CApprovalModal extends LightningModal  {
     connectedCallback() {
         console.log('CApprovalModal');
         console.log(this.pageRef);
+        this[NavigationMixin.GenerateUrl]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Event',
+                actionName: 'new',
+            },
+        }).then((url)=>console.log(url));
         
     }
 
