@@ -1,6 +1,31 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from "lightning/actions";
 
+/** icon Info [s] */
+const defaultIconUrl ='/_slds/icons/{0}-sprite/svg/symbols.svg#';
+
+const doctype =     'doctype';
+const standard =    'standard';
+const utility =     'utility';
+const custom  =     'custom';
+const action =      'action';
+/**
+* svg icon url 정보
+*
+*@param  type       icon 유형
+        'doctype'
+        'standard'
+        'utility'
+        'custom'
+        'action'
+*@param  iconName   icon 명
+*/
+export const getIconURL = (type, iconName) => {
+    if(!type) type = 'standard';
+    return defaultIconUrl.replace(/(\{0\})/, type)+iconName;
+};
+/** icon Info [e] */
+
 /**
 * ShowToast 
 *

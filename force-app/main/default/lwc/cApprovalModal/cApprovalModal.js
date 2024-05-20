@@ -5,6 +5,8 @@ import LightningModal from 'lightning/modal';
 import { CustomBaseNav } from 'c/baseNav';
 import { closeScreenAction } from 'c/utils';
 
+// const chaingResult = chainBases([CustomBaseNav,LightningElement]);
+
 export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
     closeAction = closeScreenAction.bind(this);
 
@@ -13,14 +15,14 @@ export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
 
     connectedCallback() {
         console.log('CApprovalModal');
-        console.log(this.pageRef);
-        this[NavigationMixin.GenerateUrl]({
-            type: 'standard__objectPage',
-            attributes: {
-                objectApiName: 'Event',
-                actionName: 'new',
-            },
-        }).then((url)=>console.log(url));
+        // console.log(this.pageRef);
+        // this[NavigationMixin.GenerateUrl]({
+        //     type: 'standard__objectPage',
+        //     attributes: {
+        //         objectApiName: 'Event',
+        //         actionName: 'new',
+        //     },
+        // }).then((url)=>console.log(url));
         
     }
 
@@ -39,6 +41,8 @@ export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
                 label: 'here',
             },
         ]);
+
+        setTimeout(()=>{this.template.querySelector('c-custom-toast').customShowToast()}, 1000);
     }
 
     async handleMoveHome() {

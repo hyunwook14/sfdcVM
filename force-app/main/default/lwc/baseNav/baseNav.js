@@ -1,26 +1,37 @@
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 
-const extendsBase = (Base) => {
-    return class extends Base {
+// 다중 상속 불가...
+export const chainBases = (Bases) => {
+    return chunk(Bases, Bases.pop());
+}
+
+const chunk = (Bases, chainBase) => {
+    if(Bases.length > 0) {
+        let tmpBase = Bases.pop();
+        Object.setPrototypeOf(tmpBase.prototype, chainBase.prototype);
+        
+        chunk(Bases, tmpBase);
     }
+    
+    return chainBase;
 }
 
 export const CustomBaseNav = (Base) => {
-    return class extends NavigationMixin(extendsBase(Base)) {
+    return class extends NavigationMixin(Base) {
         @wire(CurrentPageReference)
         pageRef;
 
-        navigateToApp(targetApp) {
+        navigateToApp(targetApp, replace) {
             this[NavigationMixin.Navigate]({
                 type: 'standard__app',
                 attributes: {
                     appTarget: targetApp,
                 }
-            });
+            }, replace);
         }
     
-        navigateToRecordInApp(targetApp, targetObject, targetId) {
+        navigateToRecordInApp(targetApp, targetObject, targetId, replace) {
             this[NavigationMixin.Navigate]({
                 type: 'standard__app',
                 attributes: {
@@ -34,40 +45,40 @@ export const CustomBaseNav = (Base) => {
                         }
                     }
                 }
-            });
+            }, replace);
         }
     
-        navigateToLightningComponent(targetComponent, params) {
+        navigateToLightningComponent(targetComponent, params, replace) {
             this[NavigationMixin.Navigate]({
                 type: 'standard__component',
                 attributes: {
                     componentName: targetComponent
                 },
                 state: params
-            });
+            }, replace);
         }
     
-        navigateToCustomTab(targetCustomTab) {
+        navigateToCustomTab(targetCustomTab, replace) {
             this[NavigationMixin.Navigate]({
                 type: 'standard__navItemPage',
                 attributes: {
                     apiName: targetCustomTab
                 }
-            });
+            }, replace);
         }
     
-        navigateToObjectHome(targetObject) {    
+        navigateToObjectHome(targetObject, replace) {    
             this[NavigationMixin.Navigate]({
                 type: 'standard__objectPage',
                 attributes: {
                     objectApiName: targetObject,
                     actionName: 'home',
                 },
-            });
+            }, replace);
         }
     
-        navigateToCustom(pageRef) {
-            this[NavigationMixin.Navigate](pageRef);
+        navigateToCustom(pageRef, replace) {
+            this[NavigationMixin.Navigate](pageRef, replace);
         }
 
         async generateToCustom(pageRef) {
@@ -75,10 +86,3 @@ export const CustomBaseNav = (Base) => {
         }
     };
 };
-
-
-// export const CustomBaseNav2 = (Base) =>{
-//     return class extends CustomBaseNav(extendsBase(Base)) {
-//         testSuccess=true
-//     };
-// };
