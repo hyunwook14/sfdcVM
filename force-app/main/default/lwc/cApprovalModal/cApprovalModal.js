@@ -5,25 +5,11 @@ import LightningModal from 'lightning/modal';
 import { CustomBaseNav } from 'c/baseNav';
 import { closeScreenAction } from 'c/utils';
 
-// const chaingResult = chainBases([CustomBaseNav,LightningElement]);
-
 export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
     closeAction = closeScreenAction.bind(this);
 
-    // @wire(CurrentPageReference)
-    // pageRef;
-
     connectedCallback() {
         console.log('CApprovalModal');
-        // console.log(this.pageRef);
-        // this[NavigationMixin.GenerateUrl]({
-        //     type: 'standard__objectPage',
-        //     attributes: {
-        //         objectApiName: 'Event',
-        //         actionName: 'new',
-        //     },
-        // }).then((url)=>console.log(url));
-        
     }
 
     handleOkay() {
@@ -34,13 +20,13 @@ export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
     }
 
     handleShowToast() {
-        this.template.querySelector('c-custom-toast').showToast('Success!', 'Record {0} created! See it {1}!', 'success', 'sticky',[
-            'Salesforce',
-            {
-                url: 'http://www.salesforce.com/',
-                label: 'here',
-            },
-        ]);
+        // this.template.querySelector('c-custom-toast').showToast('Success!', 'Record {0} created! See it {1}!', 'success', 'sticky',[
+        //     'Salesforce',
+        //     {
+        //         url: 'http://www.salesforce.com/',
+        //         label: 'here',
+        //     },
+        // ]);
 
         setTimeout(()=>{this.template.querySelector('c-custom-toast').customShowToast()}, 1000);
     }

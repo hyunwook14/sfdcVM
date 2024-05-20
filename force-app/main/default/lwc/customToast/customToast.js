@@ -31,20 +31,34 @@ export default class CustomToast extends LightningElement {
     @api turnOffMs = 0;
     @api title = 'Title';
     @api message = 'Message';
-    
+
+    get inputElement() {
+        this._inputElement = this.template.querySelector('.message');
+        return this._inputElement;
+    }
+
     get variantIcon() {
         return getIconURL(this.iconType, this.variant);
     }
 
+
     renderedCallback() {
-        if(this.refs) {
+        if(this.isShowCustomToast) {
             this.refs.statusThema?.classList.add('slds-theme_'+this.variant);
             this.refs.iconContainer?.classList.add('slds-icon-utility-'+this.variant);
+
+            this.renderHtml();
         }
+    }
+
+    renderHtml() {
+        if(this.inputElement)
+            this.inputElement.value = this.message;
     }
 
     @api customShowToast() {
         this.isShowCustomToast = true;
+        
     }
 
     @api showToast = showToast.bind(this);

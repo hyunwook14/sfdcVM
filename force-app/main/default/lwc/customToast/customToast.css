@@ -8,3 +8,14 @@
 .fixed .absolute {
     position:absolute;
 }
+
+.slds-notify__content {
+    word-break: break-all;
+}
+
+.message {
+    width: 100%;
+    /* height: 6.25em; */
+    border: none;
+    resize: none;
+}
