@@ -2,9 +2,9 @@ import { LightningElement, wire, api, track } from 'lwc';
 import LightningModal from 'lightning/modal';
 
 import { CustomBaseNav } from 'c/baseNav';
-import { closeScreenAction } from 'c/utils';
+import { closeScreenAction, refreshEventFire } from 'c/utils';
 import { getRecord, notifyRecordUpdateAvailable } from 'lightning/uiRecordApi';
-import { RefreshEvent } from "lightning/refresh";
+
 import apexCallToServer from '@salesforce/apex/CApprovalModalController.apexCallToServer';
 
 export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
@@ -123,9 +123,10 @@ export default class CApprovalModal extends CustomBaseNav(LightningModal)  {
        }).then(result=>{
             console.log(result);
             if(result) {
-                
-                
-                setTimeout(()=>{notifyRecordUpdateAvailable([{recordId: this.recordId}]);  this.dispatchEvent(new RefreshEvent()); this.template.querySelector('c-custom-toast').showToast('Success!', '승인 하였습니다!', 'success'); this.closeAction();}, 5000);
+                //this.dispatchEvent(new RefreshEvent());
+                refreshEventFire();
+                //notifyRecordUpdateAvailable([{recordId: this.recordId}]);
+                setTimeout(()=>{   this.template.querySelector('c-custom-toast').showToast('Success!', '승인 하였습니다!', 'success'); this.closeAction();}, 5000);
             }
        });
     }

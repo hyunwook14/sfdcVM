@@ -1,5 +1,6 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from "lightning/actions";
+import { RefreshEvent } from "lightning/refresh";
 
 /** icon Info [s] */
 const defaultIconUrl ='/_slds/icons/{0}-sprite/svg/symbols.svg#';
@@ -51,10 +52,12 @@ const utilShowToast = (title, message, variant, mode) => {
 * 호출하는 곳에서 method call 혹은 bind 필수
 *
 */
-const closeScreenAction = function() {
+export const closeScreenAction = function() {
     //debugger;
     
     this.dispatchEvent(new CloseActionScreenEvent());
 }
 
-export {closeScreenAction};
+export const refreshEventFire = function() {
+    dispatchEvent(new RefreshEvent());
+}
