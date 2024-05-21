@@ -1,12 +1,29 @@
 <template>
     <c-custom-toast variant="success" title="" message="승인 하였습니다."></c-custom-toast>
+    <div class="" lwc:if={isSpinner}>
+        <lightning-spinner alternative-text="Loading" size="x-small"></lightning-spinner>
+    </div>
     <lightning-modal-header label="Submits for Approval"></lightning-modal-header>
     <lightning-modal-body> 
-        
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="text-input-id">Approver</label>
+            <div class="slds-form-element__control">
+                <span class="output">
+                    {approverName}
+                </span>
+            </div>
+        </div>
+        <div>
+            <lightning-input-rich-text
+                label-visible
+                label="Comments"
+                value={comments}
+                onchange={handleChangeComments}>
+            </lightning-input-rich-text>
+        </div>
     </lightning-modal-body>
     <lightning-modal-footer>
-        <lightning-button label="Move Home" onclick={handleMoveHome}></lightning-button>
-        <lightning-button label="Show Toast" onclick={handleShowToast}></lightning-button>
-        <lightning-button label="OK" onclick={handleOkay}></lightning-button>
+        <lightning-button label="Close" onclick={handleCloseApproval}></lightning-button>
+        <lightning-button label="Approval" onclick={handleApproval}></lightning-button>
     </lightning-modal-footer>
 </template>
