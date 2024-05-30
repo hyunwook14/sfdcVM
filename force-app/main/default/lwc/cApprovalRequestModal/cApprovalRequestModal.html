@@ -1,0 +1,36 @@
+<template>
+    <c-custom-toast variant="success" title="" message="결재 요청 하였습니다."></c-custom-toast>
+    <div class="" lwc:if={isSpinner}>
+        <lightning-spinner alternative-text="Loading" size="x-small"></lightning-spinner>
+    </div>
+    <lightning-modal-header label="결재요청"></lightning-modal-header>
+    <lightning-modal-body> 
+        <div class="contentContainer">
+            <div>
+                <!-- 사용자 검색 -->
+                1
+            </div>
+            <div>
+                <!-- 결재 유형 -->
+                <div>
+                    <lightning-radio-group
+                        label="결재 유형"
+                        options={approvalTypeOptions}
+                        value={approvalValue}
+                        onchange={handleApprovalTypeChange}
+                        
+                    >
+                    </lightning-radio-group>
+                </div>
+            </div>
+            <div>
+                <!-- 결재자 -->
+                3
+            </div>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Close" onclick={handleCloseApprovalRequest}></lightning-button>
+        <lightning-button label="Request" onclick={handleRequest}></lightning-button>
+    </lightning-modal-footer>
+</template>

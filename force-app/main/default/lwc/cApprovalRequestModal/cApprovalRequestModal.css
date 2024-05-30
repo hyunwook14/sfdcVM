@@ -1,0 +1,4 @@
+.contentContainer {
+    display:grid;
+    grid-template-columns: auto 100px auto;
+}
