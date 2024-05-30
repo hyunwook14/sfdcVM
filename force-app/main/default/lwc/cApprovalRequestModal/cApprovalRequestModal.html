@@ -6,26 +6,123 @@
     <lightning-modal-header label="결재요청"></lightning-modal-header>
     <lightning-modal-body> 
         <div class="contentContainer">
-            <div>
+            <div class="scroll-x">
                 <!-- 사용자 검색 -->
-                1
+                <div class="">
+                    <!-- 필터 -->
+                    <lightning-input
+                        name="apprvoer-search"
+                        label="결재자"
+                        type="search"
+                    ></lightning-input>
+                </div>
+                <div class="slds-m-top_x-small">
+                    <!-- 검색 결과 -->
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>이름</th>
+                                <th>사번</th>
+                                <th>Email</th>
+                                <th>전화번호</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template lwc:if={isNotEmptySearchList}>
+                                <template for:each={searchList} for:item="searchUser">
+                                    <tr key={searchUser.id}>
+                                        <td>
+                                            <lightning-input type="checkbox" name="select" variant="label-hidden"></lightning-input>
+                                        </td>
+                                        <td>{searchUser.name}</td>
+                                        <td>100000</td>
+                                        <td>test@test.com</td>
+                                        <td>010-1234-5678</td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div>
+            <div class="contentContainer vertical-grid">
                 <!-- 결재 유형 -->
+                <div></div>
                 <div>
+                    
                     <lightning-radio-group
                         label="결재 유형"
                         options={approvalTypeOptions}
                         value={approvalValue}
                         onchange={handleApprovalTypeChange}
-                        
                     >
                     </lightning-radio-group>
+                    
+                    <div class="slds-m-top_medium">
+                        <lightning-button-icon icon-name="utility:left"  alternative-text="left" title="left"></lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:right"  alternative-text="right" title="right"></lightning-button-icon>
+                    </div>
                 </div>
+                <div></div>
             </div>
-            <div>
+            <div class="approverContainer scroll-x slds-m-top_xx-large">
                 <!-- 결재자 -->
-                3
+                <div class="approverTalbeContainer">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>유형</th>
+                                <th>이름</th>
+                                <th>사번</th>
+                                <th>Email</th>
+                                <th>전화번호</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template lwc:if={isNotEmptySelectedList}>
+                                <template for:each={selectedList} for:item="selectedUser">
+                                    <tr key={selectedUser.id}>
+                                        <td>
+                                            <lightning-input type="checkbox" name="select" variant="label-hidden"></lightning-input>
+                                        </td>
+                                        <td>{selectedUser.approveType}</td>
+                                        <td>{selectedUser.name}</td>
+                                        <td>100000</td>
+                                        <td>test@test.com</td>
+                                        <td>010-1234-5678</td>
+                                    </tr>
+                                </template>
+                            </template>
+
+                            <!-- <tr>
+                                <td>
+                                    <lightning-input type="checkbox" name="select" variant="label-hidden"></lightning-input>
+                                </td>
+                                <td>결재</td>
+                                <td>홍길동</td>
+                                <td>100000</td>
+                                <td>test@test.com</td>
+                                <td>010-1234-5678</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="moveUpDown">
+                    <button class="slds-button slds-button_icon" title="Up">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                          <use xlink:href={upIconUrl}></use>
+                        </svg>
+                        <span class="slds-assistive-text">Up</span>
+                    </button>
+                    <button class="slds-button slds-button_icon" title="Down">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                          <use xlink:href={downIconUrl}></use>
+                        </svg>
+                        <span class="slds-assistive-text">Down</span>
+                    </button>
+                </div>
             </div>
         </div>
     </lightning-modal-body>

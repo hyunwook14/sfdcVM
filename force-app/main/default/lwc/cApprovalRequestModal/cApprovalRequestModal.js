@@ -1,6 +1,6 @@
 import { api, track } from 'lwc';
 import LightningModal from 'lightning/modal';
-import { closeScreenAction, refreshEventFire } from 'c/utils';
+import { closeScreenAction, refreshEventFire, getIconURL } from 'c/utils';
 import { CustomBaseNav } from 'c/baseNav';
 
 import apexCallToServer from '@salesforce/apex/CApprovalModalController.apexCallToServer';
@@ -11,9 +11,20 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     @api objectApiName;
     @track isSpinner = false;
 
-    approvalTypeOptions = [{label:'결재자',value:'결재자'}];
+    approvalTypeOptions = [];
     approvalValue = '';
     params = {methodName:''};
+
+    upIconUrl = getIconURL('utility', 'up');
+    downIconUrl = getIconURL('utility', 'down');
+
+    searchObj = { id:'' ,name:'' ,employeeNumber:'' ,email:'' ,phone:''};
+
+    //속성 Depth가 1 경우
+    selectedObj = Object.assign({}, this.searchObj, {approveType:''});
+
+    searchList = [];
+    selectedList = [];
 
     @api 
     get recordId() {
@@ -22,6 +33,9 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     set recordId(value) {
         this._recordId = value;
     }
+
+    get isNotEmptySearchList() { return this.searchList.length>0; }
+    get isNotEmptySelectedList() { return this.selectedList.length>0;}
 
     /* lwc lifeCycle Method [s] */
     connectedCallback() {
@@ -48,7 +62,16 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
         
         this._apexCallToServer(params).then(result=>{
             this.approvalTypeOptions = result.response.approvalTypeOptions;
+            this.approvalValue = this.approvalTypeOptions[0].value;
         });
+
+        //TEST
+        for(let i=0; i<10; i++) {
+            let cloneObj = this.deepClone(this.searchObj);
+            cloneObj.id = String(i);
+            cloneObj.name = 'test'+i;
+            this.searchList.push(cloneObj);
+        }
 
         (async()=>{
             let targetId = 
@@ -70,9 +93,17 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
         
     }
 
+    addApprover() {
+
+    }
+
+    removeApprover() {
+
+    }
+
     /* js Method [e] */
 
-    /* Spinner Method [s] */
+    /* from JS to HTML  Method [s] */
     showSpinner() {
         this.isSpinner = true;
     }
@@ -80,7 +111,7 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     stopSpinner(turnOffMs) {
         setTimeout(()=> this.isSpinner=false, turnOffMs ? turnOffMs : 0);
     }
-    /* Spinner Method [e] */
+    /* from JS to HTML Method [e] */
 
     /* from Html to JS Event [s] */
     handleCloseApprovalRequest() {
@@ -91,8 +122,8 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
 
     }
 
-    handleApprovalTypeChange() {
-
+    handleApprovalTypeChange(event) {
+        this.approvalValue = event.detail.value;
     }
 
     /* from Html to JS Event [e] */

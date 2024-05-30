@@ -2,3 +2,32 @@
     display:grid;
     grid-template-columns: auto 100px auto;
 }
+
+.scroll-x {
+    overflow-x: auto;
+}
+
+.vertical-grid {
+    grid-template-columns: initial;
+    grid-template-rows: repeat(3, 1fr)
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.block {
+    display: block;
+}
+
+.approverContainer {
+    display:flex;
+}
+
+.approverTalbeContainer {
+    overflow-x: auto;
+}
+
+.moveUpDown .slds-button+.slds-button {
+    margin-left: initial;
+}
