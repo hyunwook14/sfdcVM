@@ -21,10 +21,10 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     searchObj = { id:'' ,name:'' ,employeeNumber:'' ,email:'' ,phone:''};
 
     //속성 Depth가 1 경우
-    selectedObj = Object.assign({}, this.searchObj, {approveType:''});
+    selectedObj = Object.assign({}, this.searchObj, {approveType:'', approveTypeLabel:''});
 
-    searchList = [];
-    selectedList = [];
+    @track searchList = [];
+    @track selectedList = [];
 
     @api 
     get recordId() {
@@ -94,11 +94,75 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     }
 
     addApprover() {
+        let chekedSearchList = [...this.template.querySelectorAll('.checkSearchUser')]
+                            .filter(selectCheck => selectCheck.checked)
+                            .map((currVal)=> currVal.dataset.id);
 
+        let optionList = this.approvalTypeOptions.filter(approvalTypeOption=> approvalTypeOption.value === this.approvalValue);
+
+        for(let startIdx = this.searchList.length-1; startIdx >= 0; startIdx--) {
+            if(chekedSearchList.lastIndexOf(this.searchList[startIdx].id) !== -1 ) {
+                let selectedObj = this.searchList.splice(startIdx,1)[0];
+                selectedObj.approveType        = optionList[0].value;
+                selectedObj.approveTypeLabel   = optionList[0].label;
+                this.selectedList.push(selectedObj);
+            }
+        }
+        console.log(JSON.stringify(this.selectedList));
     }
 
     removeApprover() {
 
+    }
+
+    upApprover() {
+        let checkSelectedList = [...this.template.querySelectorAll('.checkSelectedUser')]
+                            .filter(selectCheck => selectCheck.checked)
+                            .map((currVal)=> currVal.dataset.id);
+
+        this.selectedList.forEach((selectedUser, idx)=>{
+            checkSelectedList.forEach((moveUserId, moveIdx)=>{
+                let beforeSelectedMoveIdx;
+                if(moveIdx-1 !== -1) {
+                    beforeSelectedMoveIdx =this.selectedList.findIndex(selectedUser=> selectedUser.id ===checkSelectedList[moveIdx-1]);
+                }
+
+                if(selectedUser.id === moveUserId && (idx-1) !== -1  && beforeSelectedMoveIdx !== (idx-1)) {
+                    let tmpUser = this.selectedList[idx-1];
+                    this.selectedList[idx-1] = selectedUser;
+                    this.selectedList[idx] = tmpUser;
+                }
+            });
+        });
+
+    }
+
+    downApprover() {
+        let checkSelectedList = [...this.template.querySelectorAll('.checkSelectedUser')]
+                            .filter(selectCheck => selectCheck.checked)
+                            .map((currVal)=> currVal.dataset.id);
+
+        this.selectedList.forEach((selectedUser, idx)=>{
+            /*
+                some() 메소드
+                - forEach()같이 순회하는 메소드 (순회하며 따로 기능이 있는 메소드이지만, 이 강좌에선 다루지 않는다.)
+                - return true 는 break
+                - return false 는 continue
+            */
+            checkSelectedList.some((moveUserId, moveIdx)=>{
+                let afterSelectedMoveIdx;
+                if(moveIdx+1 !== this.selectedList.length) {
+                    afterSelectedMoveIdx =this.selectedList.findIndex(selectedUser=> selectedUser.id ===checkSelectedList[moveIdx+1]);
+                }
+                
+                if(selectedUser.id === moveUserId && (idx+1) !== this.selectedList.length  && afterSelectedMoveIdx !== (idx+1) ) {
+                    let tmpUser = this.selectedList[idx+1];
+                    this.selectedList[idx+1] = selectedUser;
+                    this.selectedList[idx] = tmpUser;
+                    return true;
+                }
+            });
+        });
     }
 
     /* js Method [e] */
