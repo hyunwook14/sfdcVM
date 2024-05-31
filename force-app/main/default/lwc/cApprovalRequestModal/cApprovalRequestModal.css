@@ -31,3 +31,7 @@
 .moveUpDown .slds-button+.slds-button {
     margin-left: initial;
 }
+
+.textCetner {
+    text-align: center;
+}

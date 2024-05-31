@@ -49,15 +49,19 @@
             <div class="contentContainer vertical-grid">
                 <!-- 결재 유형 -->
                 <div></div>
-                <div>
-                    
-                    <lightning-radio-group
-                        label="결재 유형"
-                        options={approvalTypeOptions}
-                        value={approvalValue}
-                        onchange={handleApprovalTypeChange}
-                    >
-                    </lightning-radio-group>
+                <div class="textCetner">
+                    <div>
+                        <span id="" class="slds-form-element__label font-weight-bold">결재 유형</span>
+                        <lightning-radio-group
+                            label="결재 유형"
+                            options={approvalTypeOptions}
+                            value={approvalValue}
+                            onchange={handleApprovalTypeChange}
+                            variant="label-hidden"
+                            
+                        >
+                        </lightning-radio-group>
+                    </div>
                     
                     <div class="slds-m-top_medium">
                         <lightning-button-icon icon-name="utility:left"  alternative-text="left" title="left"></lightning-button-icon>

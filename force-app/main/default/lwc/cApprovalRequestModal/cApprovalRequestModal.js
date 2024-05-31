@@ -1,12 +1,12 @@
 import { api, track } from 'lwc';
 import LightningModal from 'lightning/modal';
+
 import { closeScreenAction, refreshEventFire, getIconURL } from 'c/utils';
 import { CustomBaseNav } from 'c/baseNav';
 
 import apexCallToServer from '@salesforce/apex/CApprovalModalController.apexCallToServer';
 
 export default class CApprovalRequestModal extends CustomBaseNav(LightningModal) {
-
     _recordId;
     @api objectApiName;
     @track isSpinner = false;
@@ -38,6 +38,13 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     get isNotEmptySelectedList() { return this.selectedList.length>0;}
 
     /* lwc lifeCycle Method [s] */
+    constructor() {
+        console.log('CApprovalRequestModal 생성자 시작');
+        super();
+        super.size = 'large';
+        console.log('CApprovalRequestModal 생성자 끝');
+    }
+
     connectedCallback() {
         console.log('CApprovalRequestModal');
         this.showSpinner();
@@ -108,6 +115,7 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
                 this.selectedList.push(selectedObj);
             }
         }
+        this.selectedList.reverse();
         console.log(JSON.stringify(this.selectedList));
     }
 
@@ -119,21 +127,50 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
         let checkSelectedList = [...this.template.querySelectorAll('.checkSelectedUser')]
                             .filter(selectCheck => selectCheck.checked)
                             .map((currVal)=> currVal.dataset.id);
+        let beforeSelectedMoveIdx;
+        let moveIdx;
+        checkSelectedList.forEach((checkedId)=>{
+            moveIdx = this.selectedList.findIndex(selectedUser=> selectedUser.id === checkedId);
 
-        this.selectedList.forEach((selectedUser, idx)=>{
-            checkSelectedList.forEach((moveUserId, moveIdx)=>{
-                let beforeSelectedMoveIdx;
-                if(moveIdx-1 !== -1) {
-                    beforeSelectedMoveIdx =this.selectedList.findIndex(selectedUser=> selectedUser.id ===checkSelectedList[moveIdx-1]);
-                }
+            if((moveIdx-1) > -1 && (moveIdx-1) !== beforeSelectedMoveIdx) {
+                let tmpSelectedUser = this.selectedList[moveIdx-1];
+                this.selectedList[moveIdx-1] = this.selectedList[moveIdx];
+                this.selectedList[moveIdx] = tmpSelectedUser;
+            }
 
-                if(selectedUser.id === moveUserId && (idx-1) !== -1  && beforeSelectedMoveIdx !== (idx-1)) {
-                    let tmpUser = this.selectedList[idx-1];
-                    this.selectedList[idx-1] = selectedUser;
-                    this.selectedList[idx] = tmpUser;
-                }
-            });
+            if((moveIdx-1) === -1) beforeSelectedMoveIdx = moveIdx;
         });
+
+        //For문 돌리는 기준 화면 노출 배열
+        // this.selectedList.forEach((selectedUser, idx)=>{
+        //     //
+        //     if(checkSelectedList[0] === selectedUser.id) {
+        //         moveId = checkSelectedList.shift();
+
+        //         if(selectedUser.id === moveId && (idx-1) !== -1  && beforeSelectedMoveIdx !== (idx-1)) {
+        //             let tmpUser = this.selectedList[idx-1];
+        //             this.selectedList[idx-1] = selectedUser;
+        //             this.selectedList[idx] = tmpUser;
+        //         }
+                
+        //         beforeSelectedMoveIdx = this.selectedList.findIndex(selectedUser=> selectedUser.id === moveId);
+        //     }
+            
+            
+        //     // 2중 for문 버전
+        //     // checkSelectedList.forEach((moveUserId, moveIdx)=>{
+        //     //     let beforeSelectedMoveIdx;
+        //     //     if(moveIdx-1 !== -1) {
+        //     //         beforeSelectedMoveIdx =this.selectedList.findIndex(selectedUser=> selectedUser.id ===checkSelectedList[moveIdx-1]);
+        //     //     }
+
+        //     //     if(selectedUser.id === moveUserId && (idx-1) !== -1  && beforeSelectedMoveIdx !== (idx-1)) {
+        //     //         let tmpUser = this.selectedList[idx-1];
+        //     //         this.selectedList[idx-1] = selectedUser;
+        //     //         this.selectedList[idx] = tmpUser;
+        //     //     }
+        //     // });
+        // });
 
     }
 
@@ -141,28 +178,25 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
         let checkSelectedList = [...this.template.querySelectorAll('.checkSelectedUser')]
                             .filter(selectCheck => selectCheck.checked)
                             .map((currVal)=> currVal.dataset.id);
+        let afterSelectedMoveIdx;
+        let moveIdx;
+        //
+        checkSelectedList.reverse()
+                          .forEach((checkSelectedId)=>{
+            moveIdx = this.selectedList.findIndex(selectedUser=> selectedUser.id === checkSelectedId);
 
-        this.selectedList.forEach((selectedUser, idx)=>{
-            /*
-                some() 메소드
-                - forEach()같이 순회하는 메소드 (순회하며 따로 기능이 있는 메소드이지만, 이 강좌에선 다루지 않는다.)
-                - return true 는 break
-                - return false 는 continue
-            */
-            checkSelectedList.some((moveUserId, moveIdx)=>{
-                let afterSelectedMoveIdx;
-                if(moveIdx+1 !== this.selectedList.length) {
-                    afterSelectedMoveIdx =this.selectedList.findIndex(selectedUser=> selectedUser.id ===checkSelectedList[moveIdx+1]);
-                }
-                
-                if(selectedUser.id === moveUserId && (idx+1) !== this.selectedList.length  && afterSelectedMoveIdx !== (idx+1) ) {
-                    let tmpUser = this.selectedList[idx+1];
-                    this.selectedList[idx+1] = selectedUser;
-                    this.selectedList[idx] = tmpUser;
-                    return true;
-                }
-            });
+            if(moveIdx > -1 && (moveIdx+1) < this.selectedList.length && (moveIdx+1) !== afterSelectedMoveIdx) {
+                let tmpSelected = this.selectedList[moveIdx+1];
+                this.selectedList[moveIdx+1] = this.selectedList[moveIdx];
+                this.selectedList[moveIdx] = tmpSelected;
+
+                afterSelectedMoveIdx = moveIdx+1;
+            }
+            
+            // 이동할 Idx 값이 배열 Length 와 같으면 현재 Idx로
+            if((moveIdx+1) == this.selectedList.length) afterSelectedMoveIdx = moveIdx;
         });
+
     }
 
     /* js Method [e] */
