@@ -6,6 +6,11 @@ import { CustomBaseNav } from 'c/baseNav';
 
 import apexCallToServer from '@salesforce/apex/CApprovalModalController.apexCallToServer';
 
+
+// console.log(LightningModal.prototype.size);
+// LightningModal.size = 'large';
+
+
 export default class CApprovalRequestModal extends CustomBaseNav(LightningModal) {
     _recordId;
     @api objectApiName;
@@ -41,7 +46,7 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     constructor() {
         console.log('CApprovalRequestModal 생성자 시작');
         super();
-        super.size = 'large';
+        // size = 'large';
         console.log('CApprovalRequestModal 생성자 끝');
     }
 
