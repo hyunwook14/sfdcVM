@@ -73,6 +73,9 @@
             <div class="approverContainer scroll-x slds-m-top_xx-large">
                 <!-- 결재자 -->
                 <div class="approverTalbeContainer">
+                    <p>
+                        결재자
+                    </p>
                     <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                         <thead>
                             <tr>
@@ -89,7 +92,7 @@
                                 <template for:each={selectedList} for:item="selectedUser">
                                     <tr key={selectedUser.id}>
                                         <td>
-                                            <lightning-input class="checkSelectedUser" data-id={selectedUser.id} type="checkbox" name="select" variant="label-hidden"></lightning-input>
+                                            <lightning-input class="checkSelectedUser" data-id={selectedUser.id} type="checkbox" name="select" variant="label-hidden" ></lightning-input>
                                         </td>
                                         <td>{selectedUser.approveTypeLabel}</td>
                                         <td>{selectedUser.name}</td>
@@ -112,15 +115,21 @@
                             </tr> -->
                         </tbody>
                     </table>
+                    <p>
+                        공유자
+                    </p>
+                    <div>
+                        blahblah
+                    </div>
                 </div>
                 <div class="moveUpDown">
-                    <button class="slds-button slds-button_icon" title="Up" onclick={upApprover}>
+                    <button class="slds-button slds-button_icon block" title="Up" onclick={upApprover}>
                         <svg class="slds-button__icon" aria-hidden="true">
                           <use xlink:href={upIconUrl}></use>
                         </svg>
                         <span class="slds-assistive-text">Up</span>
                     </button>
-                    <button class="slds-button slds-button_icon" title="Down" onclick={downApprover}>
+                    <button class="slds-button slds-button_icon block" title="Down" onclick={downApprover}>
                         <svg class="slds-button__icon" aria-hidden="true">
                           <use xlink:href={downIconUrl}></use>
                         </svg>

@@ -16,6 +16,7 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     @api objectApiName;
     @track isSpinner = false;
 
+    isQuickAction = false;
     approvalTypeOptions = [];
     approvalValue = '';
     params = {methodName:''};
@@ -52,12 +53,50 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
 
     connectedCallback() {
         console.log('CApprovalRequestModal');
+        this.isQuickAction = this.pageRef.type === 'standard__quickAction';
+        this.addStyleElement('test',true);
         this.showSpinner();
         this.doInit();
+    }
+
+    disconnectedCallback() {
+
+    }
+
+    errorCallback(error, stack) {
+        console.info('error:: ');
+        console.log(structuredClone(error));
+        console.log(stack);
     }
     /* lwc lifeCycle Method [e] */
 
     /* js Method [s] */
+
+    // isQuickAction 이 true 일때 style Element 추가해주는 메소드
+    addStyleElement(domId, isSelf = false) {
+        let styleElement = document.createElement('style');
+        styleElement.innerHTML = `
+            .uiModal--medium .modal-container {
+                max-width: 84rem;
+                min-width: 84rem;
+            }
+        `;  
+        // styleElement.classList.add('test');
+        styleElement.setAttribute('id', domId)
+        styleElement.setAttribute('class', domId)
+        // dom 에 style Element 추가해줘
+        if(isSelf) {
+            this.template.appendChild(styleElement);
+            this.isCustomStlye = true;
+        } else {
+            document.body.appendChild(styleElement);
+        }
+    }
+
+    removeStyleElement() {
+        
+    }
+    
 
     deepClone(obj){
         return JSON.parse(JSON.stringify(obj));
@@ -69,6 +108,7 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
     }
 
     doInit() {
+
         let params = this.getParams();
         params.methodName = 'getRequestInitInfo';
         
@@ -86,9 +126,8 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
         }
 
         (async()=>{
-            let targetId = 
-            this.pageRef.type === 'standard__quickAction' ?
-                this.pageRef.state.recordId : this.recordId;
+            
+            let targetId = this.isQuickAction ? this.pageRef.state.recordId : this.recordId;
             
             // let result = await this._apexCallToServer({
             //      methodName:'getProgressingApproval'

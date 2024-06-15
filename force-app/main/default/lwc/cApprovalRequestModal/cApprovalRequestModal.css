@@ -22,6 +22,8 @@
 
 .approverContainer {
     display:flex;
+    justify-content: space-between;
+
 }
 
 .approverTalbeContainer {
