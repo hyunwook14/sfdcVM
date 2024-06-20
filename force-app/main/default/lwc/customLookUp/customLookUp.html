@@ -1,0 +1,111 @@
+<template>
+    <!-- TBD 선택된 상태에서 remove 버튼 클릭 모달 띄우거나 confirm 으로 Option으로 넣는거 -->
+    <div class="slds-form-element" onfocusin={focusInHandler} onfocusout={focusOutHandler}>
+        <label class="slds-form-element__label" for="combobox-id-1" id="combobox-label-id-40">
+            <abbr lwc:if={isRequired} class="slds-required" title="required">*</abbr> {label}
+        </label>
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+                <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+                    
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                        <template lwc:if={isSelected}>
+                            <span class="slds-icon_container slds-combobox__input-entity-icon target-icon_container select-target-icon_container" >
+                                <!-- slds-icon-standard-account -->
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                  <use xlink:href={targetIconUrl}></use>
+                                </svg>
+                                <!-- <span class="slds-assistive-text">Account</span> -->
+                              </span>
+                              <button type="button" class="slds-input_faux slds-combobox__input slds-combobox__input-value" aria-labelledby="combobox-label-id-45 combobox-id-5-selected-value" id="combobox-id-5-selected-value" aria-controls="listbox-id-5" aria-expanded="false"
+                                aria-haspopup="listbox">
+                                <span class="slds-truncate pl15" id="combobox-value-id-20">{selectedDisplayInfo}</span>
+                              </button>
+                              <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" title="Remove selected option" onclick={removeHandler}>
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                  <use xlink:href={closeIconURL}></use>
+                                </svg>
+                                <span class="slds-assistive-text">Remove selected option</span>
+                              </button>
+                        </template>
+                        <template lwc:else>
+                            <input type="text" class="customLookupInput slds-input slds-combobox__input" id="combobox-id-1"
+                                aria-autocomplete="list" aria-controls="listbox-id-1" aria-expanded="false"
+                                aria-haspopup="listbox" auto-complete="off" role="combobox" placeholder="Search..." onclick={clickHandler} oninput={inputHandler}/>
+                                  <span lwc:if={isSearchLoading} class="demo-only demo--inverse" style="height:6rem;position:relative;right:3rem;">
+                                    <div role="status" class="slds-spinner slds-spinner_x-small">
+                                      <span class="slds-assistive-text">Loading</span>
+                                      <div class="slds-spinner__dot-a"></div>
+                                      <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                  </span>
+                            <span
+                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                                <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default"
+                                    aria-hidden="true">
+                                    <use xlink:href={searchIconURL}></use>
+                                </svg>
+                            </span>
+                        </template>
+                    </div>
+                    <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid"
+                        role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template lwc:if={isNotOptionDataList}>
+                                <li class="noData"> No Data.. </li>
+                            </template>
+
+                            <template for:each={dataList} for:item="datum" for:index="index">
+                                <li key={datum.Id} role="presentation" class="slds-listbox__item" data-idx={index} onclick={selectHandler}>
+                                    <template lwc:if={isOptionShowListByOne}>
+                                    <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                            <span class="slds-media__figure slds-listbox__option-icon">
+                                                <span class="slds-icon_container target-icon_container">
+                                                    <!-- slds-icon-standard-account -->
+                                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                        <use xlink:href={targetIconUrl}>
+                                                        </use>
+                                                    </svg>
+                                                </span>
+                                            </span>
+                                            <span class="slds-media__body">
+                                                <span class="slds-truncate">{datum.Name}</span>    
+                                            </span>
+                                            
+                                    </div>
+                                    </template>
+                                    <template lwc:else>
+                                        <!-- TBD 동적으로 보여줄 항목추가-->
+                                        <div id="option2"
+                                            class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                            role="option">
+                                            <span class="slds-media__figure slds-listbox__option-icon iconCenter">
+                                                <span class="slds-icon_container target-icon_container">
+                                                    <!-- slds-icon-standard-account -->
+                                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                        <use xlink:href={targetIconUrl}>
+                                                        </use>
+                                                    </svg>
+                                                </span>
+                                            </span>
+                                            <span class="slds-media__body">
+                                                    <c-custom-look-up-option datum={datum} display-name={displayName}>
+                                                    </c-custom-look-up-option>
+                                                    <!-- <span
+                                                        class="slds-listbox__option-text slds-listbox__option-text_entity">{datum.Name}</span> -->
+                                                    <!-- <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account
+                                                        • Burlington, NC</span> -->
+                                            </span>
+                                        </div>
+                                    </template>
+                                </li>
+                            </template>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

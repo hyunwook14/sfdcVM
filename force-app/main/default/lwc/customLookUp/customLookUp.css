@@ -1,0 +1,13 @@
+.pl15 {
+    padding-left: 15px;
+}
+
+.noData {
+    padding-left: var(--slds-c-input-spacing-horizontal-start, var(--sds-c-input-spacing-horizontal-start, var(--lwc-spacingSmall,0.75rem)));
+    font-weight: bolder;
+}
+
+.iconCenter {
+    margin-top:auto !important;
+    margin-bottom:auto;
+}
