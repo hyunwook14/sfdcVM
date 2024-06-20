@@ -1,0 +1,258 @@
+<template>
+    <div class="layout">
+        <!-- header tab [S] -->
+        <div class="demo-only">
+            <div class="slds-tabs_default">
+                <div class="logo">
+                    <a class="slds-tabs_default__link" onclick={handleClickMain} data-index="0">
+                        Salesforce Maps
+                    </a>
+                </div>
+
+                <ul class="slds-tabs_default__nav header-tabs">
+                    <li class="slds-tabs_default__item slds-is-active" title="레이어" onclick={handleClickTab}
+                        data-index="0">
+                        <a class="slds-tabs_default__link" tabindex="0">
+                            <span class="slds-tabs__left-icon">
+                                <lightning-icon icon-name="utility:layers" alternative-text="layers" size="x-small"
+                                    title="small size"></lightning-icon>
+                            </span>레이어
+                        </a>
+                    </li>
+                    <!-- <li class="slds-tabs_default__item" title="경로" onclick={handleClickTab} data-index="1">
+                        <a class="slds-tabs_default__link" tabindex="0">
+                            <span class="slds-tabs__left-icon">
+                                <lightning-icon icon-name="utility:forward" alternative-text="forward" size="x-small"
+                                    title="small size"></lightning-icon>
+                            </span>경로
+                        </a>
+                    </li> -->
+                    <li class="slds-tabs_default__item" title="Schedule" onclick={handleClickTab} data-index="2">
+                        <a class="slds-tabs_default__link" tabindex="0">
+                            <span class="slds-tabs__left-icon">
+                                <lightning-icon icon-name="utility:event" alternative-text="event" size="x-small"
+                                    title="small size"></lightning-icon>
+                            </span>Schedule
+                        </a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="List" onclick={handleClickTab} data-index="3">
+                        <a class="slds-tabs_default__link" tabindex="0">
+                            <span class="slds-tabs__left-icon">
+                                <lightning-icon icon-name="utility:table" alternative-text="table" size="x-small"
+                                    title="small size"></lightning-icon>
+                            </span>List
+                        </a>
+                    </li>
+                </ul>
+                <!-- tab items [S] -->
+                <div class="slds-tabs_default__content slds-show header-tap-item">
+                    <!-- layer -->
+                    <div class="layer" style="display: flex; justify-content: space-between;">
+                        <div class="side-bar slds-box">
+                            <div class="side-bar-header slds-border_bottom">
+                                <lightning-input type="search" placeholder="모든 레이어를 검색..."></lightning-input>
+                                <div class="slds-tabs_default">
+                                    <ul class="slds-tabs_default__nav">
+                                        <li class="slds-tabs_default__item slds-is-active" title="최근 항목"
+                                            onclick={handleClickSubTab} data-index="0">
+                                            <a class="slds-tabs_default__link">최근 항목</a>
+                                        </li>
+                                        <!-- <li class="slds-tabs_default__item" title="SAVED" onclick={handleClickSubTab}
+                                            data-index="1">
+                                            <a class="slds-tabs_default__link">SAVED</a>
+                                        </li> -->
+                                        <li class="slds-tabs_default__item" title="ON THE MAP"
+                                            onclick={handleClickSubTab} data-index="2">
+                                            <a class="slds-tabs_default__link">ON THE MAP</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="side-bar-body slds-tabs_default slds-p-top_none">
+                                <!-- 최근항목 -->
+                                <div class="slds-tabs_default__content slds-show">
+                                    <div class="list-container slds-border_bottom">
+                                        <div class="list-item" onclick={handleClickRecentItem} data-map="1">
+                                            <lightning-icon icon-name="utility:target" alternative-text="target"
+                                                size="small" title="small size"
+                                                class="slds-p-horizontal_small"></lightning-icon>
+                                            <span>AI 기반 방문 추천 매장</span>
+                                        </div>
+                                        <div class="list-item" onclick={handleClickRecentItem} data-map="2">
+                                            <lightning-icon icon-name="utility:target" alternative-text="target"
+                                                size="small" title="small size"
+                                                class="slds-p-horizontal_small"></lightning-icon>
+                                            <span>매출 상위 Top 10 매장</span>
+                                        </div>
+                                        <div class="list-item" onclick={handleClickRecentItem} data-map="3">
+                                            <lightning-icon icon-name="utility:target" alternative-text="target"
+                                                size="small" title="small size"
+                                                class="slds-p-horizontal_small"></lightning-icon>
+                                            <span>이번주 행사 할당된 매장</span>
+                                        </div>
+                                        <div class="list-item" onclick={handleClickRecentItem} data-map="4">
+                                            <lightning-icon icon-name="utility:target" alternative-text="target"
+                                                size="small" title="small size"
+                                                class="slds-p-horizontal_small"></lightning-icon>
+                                            <span>전월 대비 10% 이상 매출 감소 매장</span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-m-vertical_medium slds-p-horizontal_small">
+                                        <!-- <span style="font-weight: bold;">로드 시 표시</span> -->
+                                    </div>
+                                </div>
+                                <!-- SAVED -->
+                                <div class="slds-tabs_default__content slds-hide">Item Two Content</div>
+                                <!-- ON THE MAP -->
+                                <div class="slds-tabs_default__content slds-hide">
+                                    <div class="map-list">
+                                        <div
+                                            class="list-item slds-border_top slds-border_right slds-border_bottom slds-border_left">
+                                            <div class="item-header slds-border_bottom">
+                                                <div class="title">
+                                                    <div class="icon">
+                                                        <lightning-icon icon-name="utility:target"
+                                                            alternative-text="target" size="small"
+                                                            title="small size"></lightning-icon>
+                                                    </div>
+                                                    <div class="text">
+                                                        <span>{onTheMapTitle} ({itemCnt})</span>
+                                                        <span>Retail Store</span>
+                                                    </div>
+                                                </div>
+                                                <div class="action">
+
+                                                </div>
+                                            </div>
+                                            <div class="item-body slds-border_bottom">
+                                                <div class="record-info">
+                                                    <span>Records: {itemCnt}</span>
+                                                    <span>{itemCnt} 표식 생성됨, {itemCnt} 표시.</span>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <lightning-input type="checkbox" checked></lightning-input>
+                                                </div>
+                                            </div>
+                                            <div class="item-footer slds-border_bottom">
+                                                <div class="checkbox">
+                                                    <lightning-input type="checkbox" label="All"
+                                                        checked></lightning-input>
+                                                </div>
+                                                <div class="number">
+                                                    <span>{itemCnt}</span>
+                                                    <span>of</span>
+                                                    <span>{itemCnt}</span>
+                                                    <div class="icon">
+                                                        <lightning-icon icon-name="utility:target"
+                                                            alternative-text="target" size="small"
+                                                            title="small size"></lightning-icon>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item-body slds-border_bottom">
+                                                <template for:each={storeList} for:item="item" for:index="index">
+                                                    <div key={item.index} class="checkbox">
+                                                        <lightning-input type="checkbox" label={item.title} checked></lightning-input>
+                                                    </div>
+                                                </template>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="map-container" onmousedown={handleMapMouseDown} onmouseup={handleMapMouseUp}></div> -->
+                        <div class="map-container"></div>
+                        <!-- <div class="drag-box" onclick={handleClickDragBox}></div> -->
+                    </div>
+                </div>
+                <div class="slds-tabs_default__content slds-hide header-tap-item">
+                    <!-- route -->
+                </div>
+                <div class="slds-tabs_default__content slds-hide header-tap-item" >
+                    <!-- schedule -->
+                    <div class="schedule" style="display: flex; justify-content: space-between;">
+                        <div class="side-bar slds-box">
+                            <div class="side-bar-header slds-border_bottom">
+                                <div class="calendar">
+                                    <lightning-input type="text" value={onTheMapTitle}
+                                        variant="label-hidden"></lightning-input>
+                                    <lightning-input type="date" variant="label-hidden"
+                                        class="date-picker"></lightning-input>
+                                    <lightning-button label="Today"></lightning-button>
+                                    <lightning-button-icon icon-name="utility:chevronleft"
+                                        alternative-text="chevronleft" title="chevronleft"
+                                        variant="bare"></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:chevronright"
+                                        alternative-text="chevronright" title="chevronright"
+                                        variant="bare"></lightning-button-icon>
+                                    <lightning-button variant="base" label={targetDate}></lightning-button>
+                                </div>
+                                <div class="submit">
+                                    <lightning-button label="저장"></lightning-button>
+                                </div>
+                            </div>
+                            <div class="side-bar-body slds-tabs_default slds-p-top_none">
+                                <div class="event slds-border_right slds-border_bottom">
+                                    <div class="event-header slds-border_bottom">
+                                        <span>GMT+09:00</span>
+                                        <span>{todate}</span>
+                                        <div></div>
+                                    </div>
+                                    <div class="event-body">
+                                        <div class="time slds-border_right">
+                                            <ul>
+                                                <template for:each={timeList} for:item="item" for:index="index">
+                                                    <li key={item}>{item.title}</li>
+                                                </template>
+                                            </ul>
+                                        </div>
+                                        <div class="section">
+                                            <ul>
+                                                <template for:each={eventList} for:item="item" for:index="index">
+                                                    <li data-id={item.id} key={item} class="slds-border_bottom" ondragover={cancel} ondragenter={cancel} ondrop={handleDragComplete}
+                                                    style="display: flex; justify-content: space-between;">
+                                                        <template if:true={item.retail}>
+                                                            {item.retail} <lightning-pill data-id={item.retail} data-index={item.index} onclick={handleRemove}></lightning-pill>
+                                                        </template>
+                                                    </li>
+                                                </template>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="store">
+                                    <!-- onmousedown={handleItemDown} onmouseup={handleItemUp}
+                                    onmousemove={handleItemMove} -->
+                                    <div class="store-header slds-border_bottom">
+                                        <span>Unscheduled</span>
+                                        <lightning-button label="Add to Schedule" variant="brand"
+                                            onclick={handleClickAddSchedule}></lightning-button>
+                                    </div>
+                                    <div class="store-body">
+                                        <template for:each={storeList} for:item="item" for:index="idx">
+                                            <div key={item.index} class="item" draggable="true" ondragstart={handleDragText} data-id={item.title} data-index={item.index}>
+                                                <span>{item.title}</span>
+                                                <!-- <span>{item.order}</span> -->
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <!-- <div class="item-drag-box"></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="map-container"></div>
+                    </div>
+                    <!-- <div class="map-container" onmousedown={handleMapMouseDown} onmouseup={handleMapMouseUp}></div> -->
+                </div>
+                <div class="slds-tabs_default__content slds-hide header-tap-item">
+                    <!-- list -->
+                </div>
+                <!-- [E] -->
+            </div>
+        </div>
+        <!-- [E] -->
+    </div>
+    <div class="drag-box" onclick={handleClickDragBox}></div>
+</template>

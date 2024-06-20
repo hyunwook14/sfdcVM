@@ -54,7 +54,23 @@
                             <template lwc:if={isNotOptionDataList}>
                                 <li class="noData"> No Data.. </li>
                             </template>
-
+                            <template lwc:if={isMore}>
+                                <li role="presentation" class="slds-listbox__item">
+                                    <div aria-selected="true" id="optionMore" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_term " role="option">
+                                      <span class="slds-media__figure slds-listbox__option-icon">
+                                        <span class="slds-icon_container slds-icon-utility-search" title="Search for term: ">
+                                          <svg class="slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                                            <use xlink:href={searchIconURL}></use>
+                                          </svg>
+                                          <span class="slds-assistive-text">Search for : </span>
+                                        </span>
+                                      </span>
+                                      <span class="slds-media__body">
+                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">Show More result for?</span>
+                                      </span>
+                                    </div>
+                                </li>
+                            </template>
                             <template for:each={dataList} for:item="datum" for:index="index">
                                 <li key={datum.Id} role="presentation" class="slds-listbox__item" data-idx={index} onclick={selectHandler}>
                                     <template lwc:if={isOptionShowListByOne}>

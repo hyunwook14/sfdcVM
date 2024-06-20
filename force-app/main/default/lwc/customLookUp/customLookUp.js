@@ -16,6 +16,7 @@ export default class CustomLookUp extends LightningElement {
     @api orderByClause         = ' order by CreatedDate ';
     @api whereLogicalOperator  = '';
     @api limitNum              = 100;
+    @api isMore                = false;
     _iconInfoList              = ['account'];
     _whereClauseList           = [];
     selectedDisplayInfo        ='';
