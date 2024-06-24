@@ -8,13 +8,17 @@
 public inherited sharing class SchemaInfo {
     private Schema.SObjectType type;
 
+    /**
+    * 생성자
+    *
+    */
     public SchemaInfo() {}
     public SchemaInfo(String sObjectType) {
         this.setSchema(sObjectType);
     }
 
     /**
-    * Schema SObjectType 설정
+    * 메타 Schema SObjectType 설정
     *
     *@param  sObjectType sObject API
     */
@@ -23,7 +27,7 @@ public inherited sharing class SchemaInfo {
     }
 
    /**
-   * Schema sObjectType 가져오기
+   * 메타 Schema sObjectType 가져오기
    *
    *@return  Schema.SObjectType`
    */
@@ -55,8 +59,6 @@ public inherited sharing class SchemaInfo {
     *@return  standard:account or custom: custom8 ...
     */
     public String getIconName() {
-        System.debug('[1]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
-        // System.debug('[1]'+ Limits.getCpuTime() + ' of '+ Limits.getLimitCpuTime());
         String iconName = '';
         Boolean isSkip = false;
 
@@ -85,53 +87,122 @@ public inherited sharing class SchemaInfo {
             
             if(isSkip) break;
         }
-        System.debug('[2]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
-        // System.debug('[2]'+ Limits.getCpuTime() + ' of '+ Limits.getLimitCpuTime());
         return iconName;
     }
 
+    /**
+    * 메타 Schema DescribeSObjectResult 가져오기
+    *
+    *@return  Schema.DescribeSObjectResult
+    */
     public Schema.DescribeSObjectResult getResult() {
         return this.type?.getDescribe();
     }
 
+    /**
+    * 메타 모든 Schema RecordTypeInfo 가져오기
+    *
+    *@return  Map<Id, Schema.RecordTypeInfo>
+    */
     public Map<Id, Schema.RecordTypeInfo> getRecordTypeMapByIds() {
         return this.type?.getDescribe().getRecordTypeInfosById();
     }
 
+    /**
+    * 메타 모든 Schema RecordTypeInfo 가져오기
+    *
+    *@return  Map<String, Schema.RecordTypeInfo>
+    */
     public Map<String, Schema.RecordTypeInfo> getRecordTypeMapByDeveloperNames() {
         return this.type?.getDescribe().getRecordTypeInfosByDeveloperName();
     }
 
+    /**
+    * 메타 모든 Schema RecordTypeInfo 가져오기
+    *
+    *@return  Map<String, Schema.RecordTypeInfo>
+    */
     public Map<String, Schema.RecordTypeInfo> getRecordTypeMapByNames() {
         return this.type?.getDescribe().getRecordTypeInfosByName();
     }
 
+    /**
+    * 메타 모든 Schema RecordTypeInfo 라벨 가져오기
+    *
+    *@return  Set<String>
+    */
     public Set<String> getRecordTypeMapByNamesKeySet() {
         return this.type?.getDescribe().getRecordTypeInfosByName().keySet();
     }
 
+    /**
+    * 메타 RecordType DeveloperName으로 Schema RecordTypeInfo 가져오기
+    *
+    *@return  Schema.RecordTypeInfo
+    */
     public Schema.RecordTypeInfo getRecordTypeByDeveloperName(String name) {
         return this.type?.getDescribe().getRecordTypeInfosByDeveloperName().get(name);
     }
 
+    /**
+    * 메타 RecordType Id로 Schema RecordTypeInfo 가져오기
+    *
+    *@return  Schema.RecordTypeInfo
+    */
     public Schema.RecordTypeInfo getRecordTypeById(String typeId) {
         return this.type?.getDescribe().getRecordTypeInfosById().get(typeId);
     }
 
+    /**
+    * 메타 모든 Schema SObjectField 가져오기
+    *
+    *@return  Map<String, Schema.SObjectField>
+    */
     public Map<String, Schema.SObjectField> getFieldMap() {
         return this.type?.getDescribe().fields?.getMap();
     }
 
+    /**
+    * 메타 모든 Schema FieldSet 가져오기
+    *
+    *@return  Map<String, Schema.FieldSet>
+    */
     public Map<String, Schema.FieldSet> getFieldSetMap() {
         return this.type?.getDescribe().fieldsets?.getMap();
     }
 
+    /**
+    * 메타 모든 Schema FieldSet 가져오기
+    *
+    *@return  Map<String, Schema.FieldSet>
+    */
     public Schema.DescribeFieldResult getFieldInfo(String fieldName) {
         return this.getFieldMap().get(fieldName.toLowerCase())?.getDescribe();
     }
 
+    /**
+    * 메타 픽리스트 Field의 Schema PicklistEntry(픽리스트 값) 가져오기
+    *
+    *@return  Map<String, Schema.PicklistEntry>
+    */
     public List<Schema.PicklistEntry> getPicklistEntrys(String picklistFieldName) {
         return this.getFieldInfo(picklistFieldName)?.getPicklistValues();
+    }
+
+    /**
+    * Query에 사용할 모든 Fields 정보 가져오기
+    *
+    *@return  String
+    */
+    public String getAllFieldsForQuery() {
+        String allFields = '';
+
+        for(String fieldName : this.getFieldMap().keySet()) {
+            if(String.isNotBlank(allFields)) allFields += ',';
+            allFields += this.getFieldMap().get(fieldName.toLowerCase())?.getDescribe().getName();
+        }
+
+        return allFields;        
     }
 
 }

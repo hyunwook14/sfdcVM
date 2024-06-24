@@ -4,6 +4,7 @@ import { getIconURL } from 'c/utils';
 //apex
 import getSearchData from '@salesforce/apex/CustomLookUpController.getSearchData';
 import getIconInfoByObject from '@salesforce/apex/CustomLookUpController.getIconInfoByObject'; 
+import doInit from '@salesforce/apex/CustomLookUpController.doInit';
 
 export default class CustomLookUp extends LightningElement {
     //TBD help Text 추가 , Disabled
@@ -85,6 +86,7 @@ export default class CustomLookUp extends LightningElement {
 
     /* lwc lifeCycle Method [s] */
     connectedCallback() {
+        this.doInit();
         this._customClick = this.customClick.bind(this);
         document.addEventListener('click', this._customClick); // option : true 캡쳐링단계 false 버블링단계
     }
@@ -95,9 +97,9 @@ export default class CustomLookUp extends LightningElement {
     }
 
     renderedCallback() {
-        if(this.isSelected) {
+        // if(this.isSelected) {
             this.setOptionListIcon();
-        }
+        // }
     }
 
     errorCallback(error, stack) {
@@ -109,17 +111,11 @@ export default class CustomLookUp extends LightningElement {
 
     /* from Html to JS Event [s] */
     inputHandler(event) {
-        let params = {searchField:this.searchText};
         let searchText = event.currentTarget.value;
-        if(searchText) params.searchText = searchText;
-        if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
-        if(this.fields) params.fields = this.fields.toLowerCase();
-        if(this.orderByClause) params.orderByClause = this.orderByClause;
-        if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
-        if(this.limitNum) params.limitNum = this.limitNum;
-       
+        if(searchText) this.params.searchText = searchText;
+        else delete this.params.searchText;
 
-        this._getSearchData(params);
+        this._getSearchData(this.params);
     }
 
     
@@ -132,9 +128,9 @@ export default class CustomLookUp extends LightningElement {
     }
 
     selectHandler(event) {
+        delete this.params.searchText;
         let idx = event.currentTarget.dataset.idx;
         this.selectedData = this.dataList.slice()[idx];
-        
         let displayNameList = this._displayName.split(',');
         
         for(let field in this.selectedData) {
@@ -173,7 +169,7 @@ export default class CustomLookUp extends LightningElement {
     @wire(getIconInfoByObject, { sObjectApi: '$sObjectApi' })
     getIconInfoByObjectMethod({ error, data }) {
         if (data) {
-            console.log(data.split(':'));
+            // console.log(data.split(':'));
             this._targetIconURL = getIconURL(data.split(':')[0], data.split(':')[1]);
             this.error = undefined;
         } else if (error) {
@@ -208,20 +204,7 @@ export default class CustomLookUp extends LightningElement {
         this.template.querySelector('.customLookupInput').classList.add('slds-has-focus');
         this.template.querySelector('.slds-dropdown-trigger_click').classList.add('slds-is-open');
         
-        let params = {searchField:this.searchText};
-        let searchText = this.template.querySelector('.customLookupInput').value;
-
-        if(searchText) params.searchText = searchText;
-        if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
-        if(this.fields) params.fields = this.fields.toLowerCase();
-        if(this.orderByClause) params.orderByClause = this.orderByClause;
-        if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
-        if(this.limitNum) params.limitNum = this.limitNum;
-       
-        if(!searchText) {
-            await this._getSearchData(params);
-            this.setOptionListIcon();
-        }
+        await this._getSearchData(this.params);
     }
 
     blurHandler() {
@@ -241,6 +224,28 @@ export default class CustomLookUp extends LightningElement {
                     targetIconContainer.classList.add('slds-icon-standard-'+this._iconInfoList[0])
                 }
             }
-        }
     }
+
+    doInit() {
+        doInit({}).then(result=>{
+            console.log('doInit ::');
+            console.log(result);
+            this.setParams(JSON.parse(result.params));
+        }).catch(error=>{
+            console.error(`doInit error :: `);
+            console.error(error);
+        })
+    }
+
+
+    setParams(params) {
+        if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
+        if(this.fields) params.fields = this.fields.toLowerCase();
+        if(this.orderByClause) params.orderByClause = this.orderByClause;
+        if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
+        if(this.limitNum) params.limitNum = this.limitNum;
+        this.params = params;
+    }
+
     /* js Method [e] */
+    }
