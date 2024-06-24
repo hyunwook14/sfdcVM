@@ -2,9 +2,9 @@ name: back_up
 
 on:
   workflow_dispatch:
-  schedule:
-  - cron: '55 02 * * *'
-  - cron: '15 07 * * *'
+  #schedule:
+  #- cron: '55 02 * * *'
+  #- cron: '15 07 * * *'
 
 jobs:
   back_up:
