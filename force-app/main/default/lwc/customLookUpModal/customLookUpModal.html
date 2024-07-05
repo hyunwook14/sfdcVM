@@ -1,0 +1,60 @@
+<template>
+    
+    <lightning-modal-header label={objLabel}></lightning-modal-header>
+    <lightning-modal-body> 
+        <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+            <lightning-input type="search" label={objLabel} onchange={inputHandler} value={searchParams.searchText}></lightning-input>
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover" role="listbox" id="lookup-grouped-table-id-1" aria-label="Example table for advanced modal lookup">
+              <thead>
+                <!-- TODO: 필터부분 일단 주석
+                <tr>
+                  <th colSpan="4" scope="col">
+                    <div class="slds-float_right">
+                      <button class="slds-button slds-button_icon slds-button_icon slds-button_icon-x-small" title="Filter List">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                          <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#filterList"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Filter List</span>
+                      </button>
+                      <button class="slds-button slds-button_icon slds-button_icon slds-button_icon-x-small" title="Sort">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                          <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#sort"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Sort</span>
+                      </button>
+                    </div>5 Results, sorted by relevancy</th>
+                </tr> -->
+                <tr>
+                  <template for:each={headerList} for:item="header">
+                    <th scope="col" key={header.fieldName}>
+                      <div class="slds-truncate" title={header.label}>{header.label}</div>
+                    </th>
+                  </template>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={dataList} for:item="data">
+                    <tr key={data}>
+                      <template for:each={data} for:item="datum">
+                        <th scope="row" key={datum.fieldName}>
+                          <a id="s01" href="#" role="option">
+                            <div class="slds-truncate" title="Acme Landscape">
+                              <svg class="slds-icon slds-icon-standard-account slds-icon_small slds-m-right_x-small" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#account"></use>
+                              </svg>{datum.value}</div>
+                          </a>
+                        </th>
+                      </template>
+                    </tr>
+                </template>
+              </tbody>
+            </table>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Close" onclick={handleClose}></lightning-button>
+    </lightning-modal-footer>
+
+    
+
+</template>

@@ -12,6 +12,19 @@ public with sharing class CustomLookUpController {
         }
     }
 
+    @AuraEnabled(cacheable=true)
+    public static Object getInfoByObject(String sObjectApi){
+        try {
+            SchemaInfo objectSchema = new SchemaInfo(sObjectApi);
+            return new Map<String,Object>{
+                'iconInfo'  =>  objectSchema.getIconName()
+                ,'objLabel'    =>  objectSchema.getLabel()
+            };
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
     @AuraEnabled
     public static Object doInit(){
         try {
@@ -30,12 +43,32 @@ public with sharing class CustomLookUpController {
             result.put('params', params);
 
             SearchParams searchParams = (SearchParams)JSON.deserialize(JSON.serialize(params), SearchParams.class);
-            result.put('SearchParams', searchParams);
+            result.put('searchParams', searchParams);
 
-            CustomLookUp lookUpBulider= new CustomLookUp(searchParams);
+            CustomLookUp lookUpBulider = new CustomLookUp(searchParams);
             result.put('query', searchParams.getQuery());
             result.put('data', lookUpBulider.search());
 
+            return result;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+
+    @AuraEnabled
+    public static Map<String,Object> getSearchTable(Map<String,Object> params){
+        try {
+            System.debug('[1]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+            Map<String,Object> result = new Map<String,Object>();
+            List<sObject> data = (List<sObject>)getSearchData(params).get('data');
+            SearchParams searchParams = (SearchParams)getSearchData(params).get('searchParams');
+            
+            convertTableData convertBulider = new convertTableData(searchParams.sObjectApi);
+            convertBulider.setHeaderList(searchParams.fields);
+            result.put('headerList', convertBulider.getHeaderList());
+            result.put('dataList', convertBulider.convertTableData(data));
+            System.debug('[4]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
             return result;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -64,8 +97,66 @@ public with sharing class CustomLookUpController {
         public List<sObject> search() {
             return database.query(basicInfo.getQuery());
         }
+    }
 
+    public class convertTableData {
+        private String sObjectApi;
+        private List<TableData> headerList;
+
+        public convertTableData(String sObjectApi) {
+            this.sObjectApi = sObjectApi;
+            headerList = new List<TableData>();
+        }
+
+        public void setHeaderList(String fields) {
+            // System.debug('[2]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+            if(String.isBlank(this.sObjectApi)) throw new NullSobjectException('Not Defined sObjectApi');
+
+            SchemaInfo objSchema = new SchemaInfo(this.sObjectApi);
+            for(String field : fields.split(',')) {
+                Schema.DescribeFieldResult fieldInfoResult = objSchema.getFieldInfo(field);
+                TableData data = new TableData(fieldInfoResult);
+                headerList.add(data);
+            }
+            // System.debug('[3]'+ Limits.getHeapSize() + ' of '+ Limits.getLimitHeapSize());
+        }
+
+        public List<TableData> getHeaderList() {
+            return this.headerList;
+        }
         
+        public List<List<TableData>> convertTableData(List<sObject> originDataList) {
+            List<List<TableData>> dataList = new List<List<TableData>>();
+            
+            for(sObject originData : originDataList) {
+                List<TableData> convertData = new List<TableData>();
+                for(TableData header : headerList) {
+                    TableData cloneData = header.clone();
+                    cloneData.value = String.valueOf(originData.get(header.fieldName));
+                    convertData.add(cloneData);
+                }
+                dataList.add(convertData);
+            }
+
+            return dataList;
+        }
+        
+    }
+
+    public class TableData {
+        @AuraEnabled public String label;
+        @AuraEnabled public String fieldName;
+        @AuraEnabled public String fieldType;
+        @AuraEnabled public String type;
+        @AuraEnabled public String value;
+
+        public TableData(){}
+        public TableData(Schema.DescribeFieldResult fieldInfoResult){
+            this.label     = fieldInfoResult.getLabel();
+            this.fieldName = fieldInfoResult.getLocalName();
+            //this.fieldType = fieldInfoResult.getType();
+        }
+
     }
 
     public class SearchParams {
@@ -97,7 +188,7 @@ public with sharing class CustomLookUpController {
             if(String.isNotBlank(this.fields)) query += this.fields;
             else {
                 //this.sObjectApi
-                SchemaInfo sObjectSchema = new SchemaInfo('Contact');
+                SchemaInfo sObjectSchema = new SchemaInfo(this.sObjectApi);
                 query += sObjectSchema.getAllFieldsForQuery();
             }
             query += ' from '+this.sObjectApi;

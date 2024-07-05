@@ -55,7 +55,7 @@
                                 <li class="noData"> No Data.. </li>
                             </template>
                             <template lwc:if={isMore}>
-                                <li role="presentation" class="slds-listbox__item">
+                                <li role="presentation" class="slds-listbox__item" onclick={clickMoreModalHandler}>
                                     <div aria-selected="true" id="optionMore" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_term " role="option">
                                       <span class="slds-media__figure slds-listbox__option-icon">
                                         <span class="slds-icon_container slds-icon-utility-search" title="Search for term: ">
@@ -87,11 +87,10 @@
                                             <span class="slds-media__body">
                                                 <span class="slds-truncate">{datum.Name}</span>    
                                             </span>
-                                            
                                     </div>
                                     </template>
                                     <template lwc:else>
-                                        <!-- TBD 동적으로 보여줄 항목추가-->
+                                        <!-- TODO: 동적으로 보여줄 항목추가-->
                                         <div id="option2"
                                             class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
                                             role="option">

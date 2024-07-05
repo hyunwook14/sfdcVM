@@ -1,0 +1,49 @@
+<apex:page controller="AccountReport" showheader="false"
+contentType="application/vnd.ms-excel" 
+sidebar="false"  
+standardStylesheets="false" 
+applyHtmlTag="false" 
+applyBodyTag="false" >
+
+<html> 
+            <style>
+                @page {
+                    size: A4 landscape;
+                }
+                
+                body {
+                    font-family: Arial Unicode MS;
+                }
+                
+                
+                table {
+                    border:1px solid;
+                }
+
+                </style>
+                <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+                <body> 
+                    <table class="" border="solid">                    
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!accountList}" var="account">
+                                <tr>
+                                    <td style="">
+                                        {!account['Id']}
+                                    </td>
+                                    <td>
+                                        {!account['Name']}
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </body>
+</html>
+
+</apex:page>
