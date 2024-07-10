@@ -23,7 +23,7 @@ applyBodyTag="false" >
                 </style>
                 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
                 <body> 
-                    <table class="" border="solid">                    
+                    <!-- <table class="" border="solid">                    
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -39,6 +39,28 @@ applyBodyTag="false" >
                                     <td>
                                         {!account['Name']}
                                     </td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table> -->
+                    <table class="" border="solid">                    
+                        <thead>
+                        
+                            <tr>
+                                <apex:repeat value="{!headers}" var="header">
+                                    <th>{!header['fieldName']}</th>
+                                </apex:repeat>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!accountList}" var="account">
+                                <tr>
+                                    <apex:repeat value="{!headers}" var="header">
+                                        <td style="">
+                                            {!account[header['fieldName']]}
+                                        </td>
+                                    </apex:repeat>
+                                    
                                 </tr>
                             </apex:repeat>
                         </tbody>
