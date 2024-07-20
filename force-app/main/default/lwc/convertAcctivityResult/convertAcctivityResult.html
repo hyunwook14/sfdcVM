@@ -1,0 +1,15 @@
+<template>
+    <div class="" lwc:if={isSpinner}>
+        <lightning-spinner alternative-text="Loading" size="x-small"></lightning-spinner>
+    </div>
+    <lightning-modal-header label="결과 등록"></lightning-modal-header>
+    <lightning-modal-body> 
+        <div>
+            결과 등록 하시겠습니까?
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Close" onclick={handleClose}></lightning-button>
+        <lightning-button label="Okay" onclick={handleOkay}></lightning-button>
+    </lightning-modal-footer>
+</template>
