@@ -78,19 +78,21 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
                 "actionName":"edit"
 
             }
-            ,"state":{
-                // "objectApiName":null
-                "context":"RECORD_DETAIL",
-                //"recordId":"a03dM000003goebQAA",
-                "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
-            }
+            // ,"state":{
+            //     // "objectApiName":null
+            //     "context":"RECORD_DETAIL",
+            //     //"recordId":"a03dM000003goebQAA",
+            //     "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
+            // }
         };
+        
         await updateRecord({fields}).then(result=>{
             notifyRecordUpdateAvailable([{recordId: this.recordId}])
             // setTimeout(()=>{
             //     this.navigateToCustom(movePageRef)
             //     console.log('개발환경에선 넘 잘됨..');
-            //  이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
+            //  //이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
+            // //trigger 및 apex 호출해서 그런걸 수도 있음
             // }, 3000);
         }).catch(errors=>{
             console.error(this.reduceErrors(errors));
@@ -111,10 +113,12 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
 
         console.info(url);
         location.href = url;
-        console.log('url 로 강제 이동');
+
+        //console.log('url 로 강제 이동');
         //2안도 되긴함
         //모바일에서도 되는지 확인 필요..
-
+        //모바일에서도 정상 작동
+        //LWC 에서 제공하는 URL 을 만들때 NaviagationMinMax와 PagerReference 이용하여 url 을 만들어서 정상적으로 동작하는것으로 보임
         //https://dkbmc-1ed-dev-ed.develop.lightning.force.com/lightning/r/AcctivityReport__c/a03dM000003goebQAA/edit?count=1&backgroundContext=%2Flightning%2Fr%2FAcctivityReport__c%2Fa03dM000003goebQAA%2Fview%3Fuid%3D172144126176519337
     }
 

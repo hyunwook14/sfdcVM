@@ -1,0 +1,7 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId" >
+
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+
+    Mobile 변경
+    <c:convertAcctivityResult recordId="{!v.recordId}"></c:convertAcctivityResult>
+</aura:component>
