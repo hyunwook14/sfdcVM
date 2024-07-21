@@ -3,6 +3,9 @@
     <aura:attribute name="recordId" type="String"></aura:attribute>
 
     Mobile 변  강제 url backgorund 제거 : x
-    setTimeout 3초 background  재도전
+    setTimeout 3초 background  재도전 : o
+    recordType setting edit page 로 이동 (recordType inactive 로 변경 불가)
+    강제 url backgorund 유 and setimtout 1초: x
+    강제 url backgorund 유 and setimtout 2초: O
     <c:convertAcctivityResult recordId="{!v.recordId}"></c:convertAcctivityResult>
 </aura:component>

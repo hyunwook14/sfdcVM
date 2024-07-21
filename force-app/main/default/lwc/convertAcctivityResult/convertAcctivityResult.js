@@ -5,7 +5,7 @@ import { closeScreenAction, refreshEventFire, getIconURL } from 'c/utils';
 import { CustomBaseNav } from 'c/baseNav';
 
 import { notifyRecordUpdateAvailable, updateRecord } from 'lightning/uiRecordApi';
-
+import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
 
 export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal) {
     
@@ -69,6 +69,15 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
             ,Result__c : '결과'
         };
         
+        /**
+         * 1. RecordType 변경할 필드 업데이트 후 pageReference 로 setTimout 으로 edti page로 이동 (UPlus 환경에선 안됨), 모바일 버튼도 필요
+         * 2. RecordType 변경할 필드 업데이트 후 pageReference url 생성후 setTimeout 을 적용하여 강제적으로 edit로 이동, 모바일 버튼도 필요
+         * 3. RecordType 을 default value로 setting 후 edit page 이동 => 권한없어서 x
+         */
+
+        const defaultValues = encodeDefaultFieldValues({
+            Result__c : '결과'
+          });
 
         let movePageRef = {
             "type":"standard__recordPage",
@@ -78,55 +87,32 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
                 "actionName":"edit"
 
             }
-            ,"state":{
-                // "objectApiName":null
-                // "context":"RECORD_DETAIL",
-                //"recordId":"a03dM000003goebQAA",
-                //recordTypeId=012dM000002419FQAQ
+            ,"state":{        
                 "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
+                ////3안
+                // 'recordTypeId':'012dM00000241CTQAY', //recordType inactive..
+                // 'defaultFieldValues': defaultValues,
             }
         };
+        // this.navigateToCustom(movePageRef);
+        ////recordTypeId=012dM000002419FQAQ
         
         await updateRecord({fields}).then(result=>{
             notifyRecordUpdateAvailable([{recordId: this.recordId}])
-            // setTimeout(()=>{
-            //     this.navigateToCustom(movePageRef)
-            //     console.log('개발환경에선 넘 잘됨..');
-            //  //이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
-            // //trigger 및 apex 호출해서 그런걸 수도 있음
-            // }, 3000);
+        //     //1.
+        //     // setTimeout(()=>{
+        //     //     this.navigateToCustom(movePageRef)
+        //     //     console.log('개발환경에선 넘 잘됨..');
+        //     //  //이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
+        //     // //trigger 및 apex 호출해서 그런걸 수도 있음
+        //     // }, 3000);
         }).catch(errors=>{
             console.error(this.reduceErrors(errors));
         });
-        //recordTypeId=012dM000002419FQAQ
-        const url = await this.generateToCustom(movePageRef
-        // {
-        //     "type":"standard__recordPage",
-        //     "attributes":{
-        //         "apiName":"AcctivityReport__c",
-        //         "recordId":this.recordId,
-        //         "actionName":"edit"
-        //     }
-        //     ,"state":{
-        //         // "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`//존재하면 안됨..
-        //         // "context":"RECORD_DETAIL",
-        //         // "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
-        //     }
-        // }
-        );
-
-        console.info(url);
-        // location.href = url;
-        //backgroundContext없이는 잘되네
-        setTimeout(()=>location.href = url, 3000 )
-        // ;
-
-        //console.log('url 로 강제 이동');
-        //2안도 되긴함
-        //모바일에서도 되는지 확인 필요..
-        //모바일에서도 정상 작동
-        //LWC 에서 제공하는 URL 을 만들때 NaviagationMinMax와 PagerReference 이용하여 url 을 만들어서 정상적으로 동작하는것으로 보임
-        //https://dkbmc-1ed-dev-ed.develop.lightning.force.com/lightning/r/AcctivityReport__c/a03dM000003goebQAA/edit?count=1&backgroundContext=%2Flightning%2Fr%2FAcctivityReport__c%2Fa03dM000003goebQAA%2Fview%3Fuid%3D172144126176519337
+        // //2안
+        const url = await this.generateToCustom(movePageRef);
+        // console.info(url);
+        setTimeout(()=>location.href = url, 2000);
     }
 
     reduceErrors(errors) {
