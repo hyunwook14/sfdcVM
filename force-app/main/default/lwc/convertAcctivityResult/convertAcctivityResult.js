@@ -78,12 +78,13 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
                 "actionName":"edit"
 
             }
-            // ,"state":{
-            //     // "objectApiName":null
-            //     "context":"RECORD_DETAIL",
-            //     //"recordId":"a03dM000003goebQAA",
-            //     "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
-            // }
+            ,"state":{
+                // "objectApiName":null
+                // "context":"RECORD_DETAIL",
+                //"recordId":"a03dM000003goebQAA",
+                //recordTypeId=012dM000002419FQAQ
+                "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
+            }
         };
         
         await updateRecord({fields}).then(result=>{
@@ -98,21 +99,27 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
             console.error(this.reduceErrors(errors));
         });
         //recordTypeId=012dM000002419FQAQ
-        const url = await this.generateToCustom(
-        {
-            "type":"standard__recordPage",
-            "attributes":{
-                "apiName":"AcctivityReport__c",
-                "recordId":this.recordId,
-                "actionName":"edit"
-            }
-            ,"state":{
-                "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
-            }
-        });
+        const url = await this.generateToCustom(movePageRef
+        // {
+        //     "type":"standard__recordPage",
+        //     "attributes":{
+        //         "apiName":"AcctivityReport__c",
+        //         "recordId":this.recordId,
+        //         "actionName":"edit"
+        //     }
+        //     ,"state":{
+        //         // "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`//존재하면 안됨..
+        //         // "context":"RECORD_DETAIL",
+        //         // "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
+        //     }
+        // }
+        );
 
         console.info(url);
-        location.href = url;
+        // location.href = url;
+        //backgroundContext없이는 잘되네
+        setTimeout(()=>location.href = url, 3000 )
+        // ;
 
         //console.log('url 로 강제 이동');
         //2안도 되긴함

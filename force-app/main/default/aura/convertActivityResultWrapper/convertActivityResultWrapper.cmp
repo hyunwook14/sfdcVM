@@ -2,6 +2,7 @@
 
     <aura:attribute name="recordId" type="String"></aura:attribute>
 
-    Mobile 변경
+    Mobile 변  강제 url backgorund 제거 : x
+    setTimeout 3초 background  재도전
     <c:convertAcctivityResult recordId="{!v.recordId}"></c:convertAcctivityResult>
 </aura:component>
