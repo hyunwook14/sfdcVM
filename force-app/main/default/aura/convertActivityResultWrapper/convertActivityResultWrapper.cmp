@@ -2,10 +2,34 @@
 
     <aura:attribute name="recordId" type="String"></aura:attribute>
 
-    Mobile 변  강제 url backgorund 제거 : x
+    <!-- Mobile 변  강제 url backgorund 제거 : x
     setTimeout 3초 background  재도전 : o
     recordType setting edit page 로 이동 (recordType inactive 로 변경 불가)
     강제 url backgorund 유 and setimtout 1초: x
-    강제 url backgorund 유 and setimtout 2초: O
-    <c:convertAcctivityResult recordId="{!v.recordId}"></c:convertAcctivityResult>
+    강제 url backgorund 유 and setimtout 2초: O , mobile 에서도 확인
+    
+    -->
+
+    <aura:html tag="style">
+        .quick-actions-panel .slds-modal__content:has(c-convert-acctivity-result) {
+            padding:0;
+            height:initial !important;
+        }
+        .quick-actions-panel .slds-modal__content .cuf-content:has(c-convert-acctivity-result) {
+            padding: 0;
+        }
+
+        .PHONE .cuf-content .cuf-scroller-inside {
+            padding: 0;
+            height:100%;
+        }
+
+        c-convert-acctivity-result lightning-modal-body div {
+            height: calc(100% - 111px);
+        }
+
+    </aura:html>
+    handleLastOkay 모바일은 강제 url 이동 O,
+    redirce url 하나 더 만들어서 이동 O 되지만 강제 URL 이 더 깔끔함
+    <c:convertAcctivityResult recordId="{!v.recordId}" onquickactionclose="{!c.closeAction}"></c:convertAcctivityResult>
 </aura:component>

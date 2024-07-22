@@ -1,5 +1,5 @@
 ({
-    myAction : function(component, event, helper) {
-
+    closeAction : function(component, event, helper) {
+        $A.get("e.force:closeQuickAction").fire();
     }
 })

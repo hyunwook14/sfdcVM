@@ -6,6 +6,8 @@ import { CustomBaseNav } from 'c/baseNav';
 
 import { notifyRecordUpdateAvailable, updateRecord } from 'lightning/uiRecordApi';
 import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
+import FORM_FACTOR  from "@salesforce/client/formFactor";
+import updateRecordApex from '@salesforce/apex/ConvertAcctivityResult.updateRecord';
 
 export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal) {
     
@@ -59,6 +61,102 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
 
     handleClose(event) {
         closeScreenAction.call(this);
+
+        
+          
+        this.dispatchEvent(new CustomEvent("quickactionclose", {
+            detail: { 'close':true },
+        }));
+    }
+
+    async handleLastOkay(event) {
+        console.log('handleLastOkay');
+        //최종버전
+        this.showSpinner();
+
+        const fields = {
+            Id : this.recordId
+            ,Result__c : '결과'
+        };
+
+        let movePageRef = {
+            "type":"standard__recordPage",
+            "attributes":{
+                "apiName":"AcctivityReport__c",
+                "recordId":this.recordId,
+                "actionName":"edit"
+            }
+            ,"state":{
+                "backgroundContext":encodeURI(`/lightning/r/AcctivityReport__c/${this.recordId}/view`)
+            }
+        };
+
+        const url = await this.generateToCustom(movePageRef);
+        
+        // await updateRecordApex({
+        //     recordId:this.recordId
+        // }).then(result=>{
+        //     notifyRecordUpdateAvailable([{recordId: this.recordId}])
+        //     if(FORM_FACTOR !== 'Small') {
+        //         // this.navigateToCustom({
+        //             //     type: "standard__component",
+        //             //     attributes: {
+        //                 //         componentName: "c__acctivtyNavToLinkAura",
+        //                 //     },
+        //                 //     state: {
+        //                     //         c__pageRef: JSON.stringify(movePageRef),
+        //                     //         c__IsBackgroundInfo:1
+        //                     //     },
+        //                     // }); //, true
+        //                 }
+        //             });
+        
+        await updateRecord({fields}).then(result=>{
+            // if(FORM_FACTOR !== 'Small') {
+            //     this.navigateToCustom({
+            //         type: "standard__component",
+            //         attributes: {
+            //             componentName: "c__acctivtyNavToLinkAura",
+            //         },
+            //         state: {
+            //             c__pageRef: JSON.stringify(movePageRef),
+            //             c__IsBackgroundInfo:1
+            //         },
+            //     }); //, true
+            //     console.log('?');
+            // }
+        }).catch(errors=>{
+            console.error(this.reduceErrors(errors));
+        });
+        if(FORM_FACTOR !== 'Small') {
+            // location.href = url;
+            this.navigateToCustom(movePageRef);
+            // const desckTopURL = await this.generateToCustom({
+            //     type: "standard__component",
+            //     attributes: {
+            //         componentName: "c__acctivtyNavToLinkAura",
+            //     },
+            //     state: {
+            //         c__pageRef: JSON.stringify(movePageRef),
+            //         c__IsBackgroundInfo:1
+            //     },
+            // });
+            // setTimeout(()=>location.href = desckTopURL, 1000 ) ;
+        }
+        
+        
+        if(FORM_FACTOR === 'Small') {
+            console.log('mobile');
+            setTimeout(()=>location.href=url, 1000);
+        }
+        
+
+        // this.navigateToCustom({
+        //     type: 'standard__webPage',
+        //     attributes: {
+        //         url: url
+        //     }
+        // });  //, true
     }
 
     async handleOkay() {
@@ -75,9 +173,9 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
          * 3. RecordType 을 default value로 setting 후 edit page 이동 => 권한없어서 x
          */
 
-        const defaultValues = encodeDefaultFieldValues({
-            Result__c : '결과'
-          });
+        // const defaultValues = encodeDefaultFieldValues({
+        //     Result__c : '결과'
+        //   });
 
         let movePageRef = {
             "type":"standard__recordPage",
@@ -85,34 +183,60 @@ export default class ConvertAcctivityResult extends CustomBaseNav(LightningModal
                 "apiName":"AcctivityReport__c",
                 "recordId":this.recordId,
                 "actionName":"edit"
-
             }
-            ,"state":{        
-                "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view`
-                ////3안
-                // 'recordTypeId':'012dM00000241CTQAY', //recordType inactive..
-                // 'defaultFieldValues': defaultValues,
-            }
+            // ,"state":{        
+            //     "count":3,
+            //     // "nooverride":1,
+            //     // "backgroundContext":`/lightning/r/AcctivityReport__c/${this.recordId}/view?` //`%2Flightning%2Fr%2FAcctivityReport__c%2F${this.recordId}%2Fview`//
+            //     ////3안
+            //     // 'recordTypeId':'012dM00000241CTQAY', //recordType inactive..
+            //     // 'defaultFieldValues': defaultValues,
+            // }
         };
         // this.navigateToCustom(movePageRef);
         ////recordTypeId=012dM000002419FQAQ
-        
+        const url = await this.generateToCustom(movePageRef);
         await updateRecord({fields}).then(result=>{
-            notifyRecordUpdateAvailable([{recordId: this.recordId}])
+            // notifyRecordUpdateAvailable([{recordId: this.recordId}])
+            // this.handleClose(); // 다는 행위가 문제일 가능성큼
         //     //1.
-        //     // setTimeout(()=>{
-        //     //     this.navigateToCustom(movePageRef)
-        //     //     console.log('개발환경에선 넘 잘됨..');
-        //     //  //이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
-        //     // //trigger 및 apex 호출해서 그런걸 수도 있음
-        //     // }, 3000);
+            // setTimeout(()=>{
+            // //     this.navigateToCustom(movePageRef)
+            // //     console.log('개발환경에선 넘 잘됨..');
+            // //  //이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
+            // // //trigger 및 apex 호출해서 그런걸 수도 있음
+            // this.navigateToCustom(movePageRef)
+            // }, 3000);
         }).catch(errors=>{
             console.error(this.reduceErrors(errors));
         });
-        // //2안
-        const url = await this.generateToCustom(movePageRef);
+        // //2안 안되는 경우가 많음.. //맨 첨 화면에서는 되는데 그다음부턴 안됨..
+        
+
+        this.navigateToCustom({
+            type: 'standard__webPage',
+            attributes: {
+                url: url
+            }
+        }, true);
+        
         // console.info(url);
-        setTimeout(()=>location.href = url, 2000);
+        
+        // setTimeout(()=>{
+        //     //이거 왜 안될까? U+ 에서는 뒤에 BackGround Context 가 없어서 그런걸까..?
+        // //trigger 및 apex 호출해서 그런걸 수도 있음
+        // }, 3000);
+
+        // setTimeout(()=> location.href = url, 2500)
+        
+        // setTimeout(()=>location.href = url, 3000);
+        ///lightning/r/a03dM000003idaFQAQ/edit?backgroundContext=%2Flightning%2Fr%2FAcctivityReport__c%2Fa03dM000003idaFQAQ%2Fview
+        //"/lightning/r/AcctivityReport__c/a03dM000003iezLQAQ/view?uid=172155376111994073"
+        //"/lightning/r/AcctivityReport__c/a03dM000003iezLQAQ/view?uid=17215539263942598"
+        //"/lightning/r/AcctivityReport__c/a03dM000003igwHQAQ/view?uid=17215541757241750"
+        ///lightning/r/AcctivityReport__c/a03dM000003icsgQAA/edit?backgroundContext=%2Flightning%2Fr%2FAcctivityReport__c%2Fa03dM000003icsgQAA%2Fview%3F&count=1
+        //https://dkbmc-1ed-dev-ed.develop.lightning.force.com/lightning/r/AcctivityReport__c/a03dM000003ibF5QAI/view?uid=172155477980459047
+        //https://dkbmc-1ed-dev-ed.develop.lightning.force.com/lightning/r/AcctivityReport__c/a03dM000003ibF5QAI/edit?count=2&backgroundContext=%2Flightning%2Fr%2FAcctivityReport__c%2Fa03dM000003ibF5QAI%2Fview%3Fuid%3D172155477980459047
     }
 
     reduceErrors(errors) {
