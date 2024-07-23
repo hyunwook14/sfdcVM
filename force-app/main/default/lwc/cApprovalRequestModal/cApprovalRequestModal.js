@@ -1,4 +1,4 @@
-import { api, track } from 'lwc';
+import { LightningElement,api, track } from 'lwc';
 import LightningModal from 'lightning/modal';
 
 import { closeScreenAction, refreshEventFire, getIconURL } from 'c/utils';
@@ -11,7 +11,7 @@ import apexCallToServer from '@salesforce/apex/CApprovalModalController.apexCall
 // LightningModal.size = 'large';
 
 
-export default class CApprovalRequestModal extends CustomBaseNav(LightningModal) {
+export default class CApprovalRequestModal extends CustomBaseNav(LightningElement) {
     _recordId;
     @api objectApiName;
     @track isSpinner = false;
@@ -118,7 +118,7 @@ export default class CApprovalRequestModal extends CustomBaseNav(LightningModal)
         });
 
         //TEST
-        for(let i=0; i<10; i++) {
+        for(let i=0; i<200; i++) {
             let cloneObj = this.deepClone(this.searchObj);
             cloneObj.id = String(i);
             cloneObj.name = 'test'+i;

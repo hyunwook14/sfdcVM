@@ -10,7 +10,7 @@
     
     -->
 
-    <aura:html tag="style">
+    <!-- <aura:html tag="style">
         .quick-actions-panel .slds-modal__content:has(c-convert-acctivity-result) {
             padding:0;
             height:initial !important;
@@ -31,5 +31,6 @@
     </aura:html>
     handleLastOkay 모바일은 강제 url 이동 O,
     redirce url 하나 더 만들어서 이동 O 되지만 강제 URL 이 더 깔끔함
-    <c:convertAcctivityResult recordId="{!v.recordId}" onquickactionclose="{!c.closeAction}"></c:convertAcctivityResult>
+    <c:convertAcctivityResult recordId="{!v.recordId}" onquickactionclose="{!c.closeAction}"></c:convertAcctivityResult> -->
+    <c:cApprovalRequestModal recordId="{!v.recordId}"></c:cApprovalRequestModal>
 </aura:component>
